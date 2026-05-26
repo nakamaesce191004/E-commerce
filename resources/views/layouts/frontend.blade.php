@@ -119,6 +119,11 @@
                         @endif
                     </a>
 
+                    <button type="button" data-theme-toggle class="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-200 transition-colors hover:border-emerald-500/40 hover:text-white">
+                        <i data-lucide="sun" data-theme-icon class="h-4 w-4"></i>
+                        <span data-theme-label>Mode gelap</span>
+                    </button>
+
                     <!-- Auth Dropdown -->
                     @auth
                         <div x-data="{ open: false }" class="relative" @click.away="open = false">
@@ -209,6 +214,10 @@
                 <a href="{{ route('wishlist.index') }}" class="text-base font-medium text-slate-300 hover:text-emerald-400 py-1 flex items-center gap-2">
                     <i data-lucide="heart" class="h-5 w-5"></i> Wishlist Saya
                 </a>
+                <button type="button" data-theme-toggle class="flex w-full items-center justify-start gap-3 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-200">
+                    <i data-lucide="sun" data-theme-icon class="h-4 w-4"></i>
+                    <span data-theme-label>Mode gelap</span>
+                </button>
                 <hr class="border-slate-900 my-1">
                 @auth
                     <div class="flex items-center gap-3 py-2">

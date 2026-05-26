@@ -111,7 +111,11 @@
 
             <!-- Right actions -->
             <div class="flex items-center gap-4 text-xs">
-                <!-- User dropdown -->
+                <button type="button" data-theme-toggle class="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-1.5 font-semibold text-slate-200 transition-colors hover:border-emerald-500/40 hover:text-white">
+                    <i data-lucide="sun" data-theme-icon class="h-4 w-4"></i>
+                    <span data-theme-label>Mode gelap</span>
+                </button>
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-red-900/30 hover:bg-red-950/40 text-slate-400 hover:text-red-400 transition-all font-bold">

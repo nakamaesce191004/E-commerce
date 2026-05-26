@@ -5,9 +5,19 @@
 @tailwind utilities;
 
 @layer base {
+    html {
+        color-scheme: dark;
+    }
+
+    html.theme-light {
+        color-scheme: light;
+    }
+
     body {
         font-family: 'Inter', sans-serif;
+        transition: background-color 0.2s ease, color 0.2s ease;
     }
+
     h1, h2, h3, h4, h5, h6 {
         font-family: 'Outfit', sans-serif;
     }
@@ -59,3 +69,40 @@
 .hover-glow-orange:hover {
     box-shadow: 0 0 25px rgba(249, 115, 22, 0.3);
 }
+
+html.theme-light .glass {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+html.theme-light .glass-light {
+    background: rgba(248, 250, 252, 0.9);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+html.theme-light .bg-slate-950 { background-color: #f8fafc !important; }
+html.theme-light .bg-slate-900 { background-color: #f1f5f9 !important; }
+html.theme-light .bg-slate-800 { background-color: #e2e8f0 !important; }
+html.theme-light .bg-slate-900\/10 { background-color: rgba(226, 232, 240, 0.75) !important; }
+html.theme-light .bg-slate-900\/20 { background-color: rgba(226, 232, 240, 0.7) !important; }
+html.theme-light .bg-slate-900\/30 { background-color: rgba(226, 232, 240, 0.65) !important; }
+html.theme-light .bg-slate-900\/40 { background-color: rgba(226, 232, 240, 0.8) !important; }
+html.theme-light .bg-slate-900\/50 { background-color: rgba(226, 232, 240, 0.85) !important; }
+html.theme-light .bg-slate-900\/60 { background-color: rgba(226, 232, 240, 0.9) !important; }
+html.theme-light .bg-slate-950\/90 { background-color: rgba(248, 250, 252, 0.95) !important; }
+
+html.theme-light .text-slate-100 { color: #0f172a !important; }
+html.theme-light .text-slate-200 { color: #1e293b !important; }
+html.theme-light .text-slate-300 { color: #334155 !important; }
+html.theme-light .text-slate-400 { color: #475569 !important; }
+html.theme-light .text-slate-500 { color: #64748b !important; }
+html.theme-light .text-slate-600 { color: #475569 !important; }
+html.theme-light .text-white { color: #0f172a !important; }
+
+html.theme-light .border-slate-900 { border-color: #cbd5e1 !important; }
+html.theme-light .border-slate-800 { border-color: #cbd5e1 !important; }
+html.theme-light .border-slate-900\/30 { border-color: rgba(148, 163, 184, 0.35) !important; }
+
+html.theme-light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
+html.theme-light .hover\:bg-slate-900:hover { background-color: #f1f5f9 !important; }
+html.theme-light .hover\:bg-slate-950:hover { background-color: #f8fafc !important; }

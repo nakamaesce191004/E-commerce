@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
+    
     // Admin Categories CRUD
     Route::get('/categories', [AdminDashboardController::class, 'categoriesIndex'])->name('categories.index');
     Route::post('/categories', [AdminDashboardController::class, 'categoriesStore'])->name('categories.store');
@@ -86,4 +86,5 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [AdminDashboardController::class, 'usersIndex'])->name('users.index');
 });
 
+// Import Breeze Auth definitions
 require __DIR__.'/auth.php';
