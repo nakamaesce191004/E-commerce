@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
-@section('page_title', 'Kelola Transaksi #' . ($rental->payment->transaction_id ?? $rental->id))
+@section('page_title', 'Periksa Bukti & Barang sewa #' . ($rental->payment->transaction_id ?? $rental->id))
 
 @section('content')
 <!-- Breadcrumbs -->
 <nav class="flex text-xs text-slate-500 gap-2 mb-8 items-center">
     <a href="{{ route('admin.dashboard') }}" class="hover:text-white transition-colors">Admin Dashboard</a>
     <i data-lucide="chevron-right" class="h-3 w-3"></i>
-    <a href="{{ route('admin.rentals.index') }}" class="hover:text-white transition-colors">Transaksi Sewa</a>
+    <a href="{{ route('admin.confirmations.index') }}" class="hover:text-white transition-colors">Konfirmasi Pemesanan</a>
     <i data-lucide="chevron-right" class="h-3 w-3"></i>
-    <span class="text-slate-300 font-semibold truncate">Detail Transaksi #{{ $rental->id }}</span>
+    <span class="text-slate-300 font-semibold truncate">Detail Verifikasi #{{ $rental->id }}</span>
 </nav>
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -21,13 +21,12 @@
         <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 glass space-y-6">
             <div class="flex items-center justify-between border-b border-slate-850 pb-3">
                 <h3 class="font-display font-bold text-white text-sm flex items-center gap-2">
-                    <i data-lucide="file-text" class="text-slate-400 h-4.5 w-4.5"></i> Informasi Invoice & Renter
+                    <i data-lucide="file-text" class="text-slate-400 h-4.5 w-4.5"></i> Detail Customer & Pengiriman
                 </h3>
                 
-                <!-- Print Invoice Button -->
-                <a href="{{ route('admin.rentals.invoice', $rental->id) }}" target="_blank" class="px-3.5 py-1.5 rounded-lg border border-slate-800 hover:border-emerald-500 hover:bg-slate-950 text-slate-400 hover:text-emerald-400 text-xs font-bold transition-all flex items-center gap-1.5">
-                    <i data-lucide="printer" class="h-3.5 w-3.5"></i> Cetak Invoice PDF
-                </a>
+                <span class="px-2.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase bg-yellow-950 text-yellow-400 border border-yellow-500/20 flex items-center gap-1">
+                    <span class="h-1.5 w-1.5 rounded-full bg-yellow-400 animate-ping"></span> Menunggu Verifikasi
+                </span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-slate-300">
@@ -35,11 +34,24 @@
                     <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Rincian Customer</p>
                     <p class="font-bold text-white text-sm">{{ $rental->user->name }}</p>
                     <p class="font-mono text-slate-400">{{ $rental->user->email }}</p>
-                    <p class="font-mono text-slate-400">WA Hotline: {{ $rental->phone }}</p>
+                    <p class="font-mono text-slate-400">WhatsApp: {{ $rental->phone }}</p>
                 </div>
                 <div class="space-y-2">
                     <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Alamat Pengiriman / Ambil</p>
                     <p class="font-semibold text-white leading-relaxed">{{ $rental->shipping_address }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-900">
+                    <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider mb-1">Metode Pembayaran</p>
+                    <p class="font-bold text-white uppercase">{{ $rental->payment_method }}</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-900">
+                    <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider mb-1">Status Pembayaran</p>
+                    <p class="font-bold text-white">
+                        {{ $rental->payment_status === 'paid' ? 'Lunas' : ($rental->payment_status === 'unpaid' ? 'Belum Bayar' : 'Expired') }}
+                    </p>
                 </div>
             </div>
 
@@ -49,19 +61,12 @@
                     <p class="text-slate-300 italic font-mono">"{{ $rental->note }}"</p>
                 </div>
             @endif
-
-            @if($rental->admin_note)
-                <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-900/30 text-xs mt-3">
-                    <p class="text-[9px] text-emerald-400 uppercase font-bold tracking-wider mb-1">Catatan Verifikasi Admin</p>
-                    <p class="text-slate-300 font-mono">"{{ $rental->admin_note }}"</p>
-                </div>
-            @endif
         </div>
 
         <!-- Hired Items list -->
         <div class="p-6 rounded-2xl bg-slate-900/30 border border-slate-900 glass space-y-6">
             <h3 class="font-display font-bold text-white text-sm border-b border-slate-850 pb-3 flex items-center gap-2">
-                <i data-lucide="package" class="text-slate-400 h-4.5 w-4.5"></i> Unit Alat yang Disewa
+                <i data-lucide="package" class="text-slate-400 h-4.5 w-4.5"></i> Barang yang Dipesan
             </h3>
 
             <div class="divide-y divide-slate-850 space-y-6">
@@ -105,60 +110,12 @@
 
     </div>
 
-    <!-- 2. Right Column: Payment receipt & Operational cockpit controls -->
-    <div class="lg:col-span-4 space-y-6">
+    <!-- 2. Right Column: Payment receipt & Cockpit controls -->
+    <div class="lg:col-span-4 space-y-6" x-data="{ zoomModal: false }">
         
-        <!-- Operational Cockpit Forms -->
-        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 glass space-y-6">
-            <h3 class="font-display font-bold text-white text-sm border-b border-slate-850 pb-3 flex items-center gap-2">
-                <i data-lucide="sliders" class="text-emerald-400 h-4.5 w-4.5"></i> Cockpit Kontrol Status
-            </h3>
-
-            <form action="{{ route('admin.rentals.update', $rental->id) }}" method="POST" class="space-y-5 text-xs">
-                @csrf
-                @method('PUT')
-                
-                <div>
-                    <label for="status" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Status Peminjaman</label>
-                    <select id="status" name="status" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
-                        <option value="pending" {{ $rental->status === 'pending' ? 'selected' : '' }}>Menunggu Verifikasi</option>
-                        <option value="approved" {{ $rental->status === 'approved' ? 'selected' : '' }}>Disetujui (Siap Kirim/Ambil)</option>
-                        <option value="borrowed" {{ $rental->status === 'borrowed' ? 'selected' : '' }}>Sedang Dipinjam (Borrowed)</option>
-                        <option value="completed" {{ $rental->status === 'completed' ? 'selected' : '' }}>Telah Kembali (Selesai)</option>
-                        <option value="rejected" {{ $rental->status === 'rejected' ? 'selected' : '' }}>Dibatalkan / Ditolak (Rejected)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="payment_status" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Status Pembayaran</label>
-                    <select id="payment_status" name="payment_status" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
-                        <option value="unpaid" {{ $rental->payment_status === 'unpaid' ? 'selected' : '' }}>Belum Bayar (Unpaid)</option>
-                        <option value="paid" {{ $rental->payment_status === 'paid' ? 'selected' : '' }}>Lunas Terverifikasi (Paid)</option>
-                        <option value="expired" {{ $rental->payment_status === 'expired' ? 'selected' : '' }}>Kedaluwarsa / Batalkan (Expired)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="admin_note" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Catatan Verifikasi Admin (Opsional)</label>
-                    <textarea id="admin_note" name="admin_note" rows="3" placeholder="Contoh: Bukti bayar terverifikasi Rp 500k via Mandiri, atau alasan penolakan..." class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none placeholder-slate-600 leading-relaxed">{{ old('admin_note', $rental->admin_note) }}</textarea>
-                </div>
-
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-950 space-y-2">
-                    <div class="flex justify-between font-bold text-slate-400">
-                        <span>Total Tagihan:</span>
-                        <span class="text-emerald-400 text-sm">Rp {{ number_format($rental->total_price, 0, ',', '.') }}</span>
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold hover-glow-emerald rounded-xl transition-all shadow-md">
-                    Perbarui Status Sewa
-                </button>
-            </form>
-        </div>
-
         <!-- Receipt Proof Visualizer -->
         @if($rental->payment_method === 'transfer')
-            <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 glass space-y-6" x-data="{ zoomModal: false }">
+            <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 glass space-y-6">
                 <h3 class="font-display font-bold text-white text-sm border-b border-slate-850 pb-3 flex items-center gap-2">
                     <i data-lucide="image" class="text-slate-400 h-4.5 w-4.5"></i> Bukti Transfer Bank
                 </h3>
@@ -238,7 +195,54 @@
                     </div>
                 @endif
             </div>
+        @else
+            <!-- Midtrans details -->
+            <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 glass space-y-6">
+                <h3 class="font-display font-bold text-white text-sm border-b border-slate-850 pb-3 flex items-center gap-2">
+                    <i data-lucide="credit-card" class="text-slate-400 h-4.5 w-4.5"></i> Sistem Pembayaran Online
+                </h3>
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-900 text-xs space-y-2">
+                    <p class="text-slate-400 font-semibold">Metode: Midtrans Snap</p>
+                    <p class="text-slate-500">Status transaksi akan terverifikasi secara otomatis oleh sistem webhook Midtrans simulator ketika customer melunasi.</p>
+                </div>
+            </div>
         @endif
+
+        <!-- Operational Cockpit Forms -->
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 glass space-y-6">
+            <h3 class="font-display font-bold text-white text-sm border-b border-slate-850 pb-3 flex items-center gap-2">
+                <i data-lucide="sliders" class="text-emerald-400 h-4.5 w-4.5"></i> Keputusan Verifikasi Admin
+            </h3>
+
+            <form action="{{ route('admin.confirmations.update', $rental->id) }}" method="POST" class="space-y-5 text-xs">
+                @csrf
+                @method('PUT')
+                
+                <div>
+                    <label for="status" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Tindakan Admin</label>
+                    <select id="status" name="status" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
+                        <option value="approved">Setujui Pesanan & Verifikasi Lunas</option>
+                        <option value="rejected">Tolak / Batalkan Pesanan</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="admin_note" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Catatan Verifikasi Admin (Opsional)</label>
+                    <textarea id="admin_note" name="admin_note" rows="3" placeholder="Tulis catatan konfirmasi/alasan penolakan di sini..." class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none placeholder-slate-600 leading-relaxed">{{ old('admin_note', $rental->admin_note) }}</textarea>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-950 space-y-2">
+                    <div class="flex justify-between font-bold text-slate-400">
+                        <span>Total Tagihan:</span>
+                        <span class="text-emerald-400 text-sm">Rp {{ number_format($rental->total_price, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold hover-glow-emerald rounded-xl transition-all shadow-md">
+                    Kirim Keputusan Verifikasi
+                </button>
+            </form>
+        </div>
 
     </div>
 

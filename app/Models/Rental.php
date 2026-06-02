@@ -17,6 +17,7 @@ class Rental extends Model
         'total_price',
         'status',
         'note',
+        'admin_note',
         'shipping_address',
         'phone',
         'payment_method',

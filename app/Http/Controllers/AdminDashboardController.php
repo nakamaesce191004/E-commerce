@@ -330,7 +330,8 @@ class AdminDashboardController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,approved,borrowed,completed,rejected',
-            'payment_status' => 'required|in:unpaid,paid,expired'
+            'payment_status' => 'required|in:unpaid,paid,expired',
+            'admin_note' => 'nullable|string|max:500'
         ]);
 
         $rental = Rental::with('payment')->findOrFail($id);
@@ -339,18 +340,21 @@ class AdminDashboardController extends Controller
         try {
             $rental->update([
                 'status' => $request->status,
-                'payment_status' => $request->payment_status
+                'payment_status' => $request->payment_status,
+                'admin_note' => $request->admin_note
             ]);
 
             // Sync payment status
-            $paymentStatus = 'pending';
-            if ($request->payment_status === 'paid') {
-                $paymentStatus = 'settled';
-            } elseif ($request->payment_status === 'expired') {
-                $paymentStatus = 'expired';
+            if ($rental->payment) {
+                $paymentStatus = 'pending';
+                if ($request->payment_status === 'paid') {
+                    $paymentStatus = 'settled';
+                } elseif ($request->payment_status === 'expired') {
+                    $paymentStatus = 'expired';
+                }
+                
+                $rental->payment->update(['status' => $paymentStatus]);
             }
-            
-            $rental->payment->update(['status' => $paymentStatus]);
 
             DB::commit();
             return redirect()->back()->with('success', 'Status transaksi & sewa berhasil diperbarui!');
@@ -395,5 +399,95 @@ class AdminDashboardController extends Controller
             ->paginate(15);
 
         return view('admin.users', compact('users'));
+    }
+
+    /* =========================================================================
+       DEDICATED ORDER CONFIRMATIONS PANEL
+       ========================================================================= */
+
+    public function confirmationsIndex(Request $request)
+    {
+        $query = Rental::with(['user', 'payment'])->where('status', 'pending');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where(function($sub) use ($request) {
+                $sub->whereHas('user', function($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%')
+                      ->orWhere('email', 'like', '%' . $request->search . '%');
+                })->orWhere('id', $request->search);
+            });
+        }
+
+        $rentals = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('admin.confirmations', compact('rentals'));
+    }
+
+    public function confirmationsShow($id)
+    {
+        // Show pending order specifically for confirmations
+        $rental = Rental::with(['user', 'items.product.category', 'payment'])
+            ->where('status', 'pending')
+            ->findOrFail($id);
+
+        return view('admin.confirm-detail', compact('rental'));
+    }
+
+    public function confirmationsUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+            'admin_note' => 'nullable|string|max:500'
+        ]);
+
+        $rental = Rental::with('payment')->where('status', 'pending')->findOrFail($id);
+
+        if ($request->status === 'approved') {
+            $isPaymentVerified = false;
+
+            if ($rental->payment_method === 'midtrans') {
+                $isPaymentVerified = $rental->payment_status === 'paid';
+            }
+
+            if ($rental->payment_method === 'transfer') {
+                $isPaymentVerified = !empty($rental->payment) && !empty($rental->payment->payment_proof);
+            }
+
+            if (!$isPaymentVerified) {
+                return redirect()->back()->with('error', 'Pesanan belum dapat disetujui karena pembayaran belum diverifikasi.');
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            $paymentStatus = 'unpaid';
+            $dbPaymentStatus = 'pending';
+
+            if ($request->status === 'approved') {
+                $paymentStatus = 'paid';
+                $dbPaymentStatus = 'settled';
+            } elseif ($request->status === 'rejected') {
+                $paymentStatus = 'expired';
+                $dbPaymentStatus = 'expired';
+            }
+
+            $rental->update([
+                'status' => $request->status,
+                'payment_status' => $paymentStatus,
+                'admin_note' => $request->admin_note
+            ]);
+
+            if ($rental->payment) {
+                $rental->payment->update(['status' => $dbPaymentStatus]);
+            }
+
+            DB::commit();
+
+            $msg = $request->status === 'approved' ? 'Pesanan berhasil disetujui dan diverifikasi lunas!' : 'Pesanan berhasil ditolak.';
+            return redirect()->route('admin.confirmations.index')->with('success', $msg);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal memverifikasi: ' . $e->getMessage());
+        }
     }
 }

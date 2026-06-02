@@ -73,37 +73,21 @@
                 <div class="p-8 rounded-2xl bg-slate-900/20 border border-slate-900 glass space-y-6">
                     <h3 class="font-display font-bold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-3">
                         <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold font-mono">2</span>
-                        Pilih Metode Pembayaran
+                        Metode Pembayaran
                     </h3>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Transfer Bank -->
-                        <label class="relative flex items-start gap-4 p-5 rounded-2xl border cursor-pointer hover:bg-slate-900/40 transition-colors"
-                               :class="paymentMethod === 'transfer' ? 'border-emerald-500 bg-emerald-500/5' : 'border-slate-800 bg-slate-950/20'"
-                               x-data="{ paymentMethod: 'transfer' }"
-                               @click="paymentMethod = 'transfer'">
-                            <input type="radio" name="payment_method" value="transfer" checked class="mt-1 text-emerald-500 focus:ring-emerald-500/20 bg-slate-950 border-slate-800">
-                            <div>
-                                <h4 class="font-bold text-white text-xs mb-1 flex items-center gap-1">
-                                    <i data-lucide="landmark" class="h-4 w-4 text-slate-400"></i> Transfer Bank (Manual)
-                                </h4>
-                                <p class="text-[10px] text-slate-400 leading-relaxed">Transfer manual ke rekening BCA/Mandiri kami. Memerlukan verifikasi upload bukti bayar.</p>
-                            </div>
-                        </label>
+                    <input type="hidden" name="payment_method" value="midtrans">
 
-                        <!-- Midtrans Online Gateway -->
-                        <label class="relative flex items-start gap-4 p-5 rounded-2xl border cursor-pointer hover:bg-slate-900/40 transition-colors"
-                               :class="paymentMethod === 'midtrans' ? 'border-emerald-500 bg-emerald-500/5' : 'border-slate-800 bg-slate-950/20'"
-                               x-data="{ paymentMethod: 'transfer' }"
-                               @click="paymentMethod = 'midtrans'">
-                            <input type="radio" name="payment_method" value="midtrans" class="mt-1 text-emerald-500 focus:ring-emerald-500/20 bg-slate-950 border-slate-800">
-                            <div>
-                                <h4 class="font-bold text-white text-xs mb-1 flex items-center gap-1">
-                                    <i data-lucide="credit-card" class="h-4 w-4 text-slate-400"></i> Midtrans Secure Pay
-                                </h4>
-                                <p class="text-[10px] text-slate-400 leading-relaxed">Bayar instan via Virtual Account, QRIS (Gopay/OVO), ShopeePay, dsb. Terverifikasi otomatis.</p>
+                    <div class="p-5 rounded-2xl border border-emerald-500 bg-emerald-500/5">
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                                <i data-lucide="credit-card" class="h-4 w-4"></i>
                             </div>
-                        </label>
+                            <div>
+                                <h4 class="font-bold text-white text-sm mb-1">Midtrans Secure Pay</h4>
+                                <p class="text-[10px] text-slate-300 leading-relaxed">Pembayaran dilakukan melalui gateway Midtrans (simulasi sandbox). Admin akan memverifikasi status transaksi dan ketersediaan barang sebelum pesanan diproses.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

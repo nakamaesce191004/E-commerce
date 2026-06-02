@@ -75,11 +75,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('/products/{id}', [AdminDashboardController::class, 'productsUpdate'])->name('products.update');
     Route::delete('/products/{id}', [AdminDashboardController::class, 'productsDestroy'])->name('products.destroy');
 
-    // Admin Rental Orders
-    Route::get('/rentals', [AdminDashboardController::class, 'rentalsIndex'])->name('rentals.index');
-    Route::get('/rentals/{id}', [AdminDashboardController::class, 'rentalsShow'])->name('rentals.show');
-    Route::put('/rentals/{id}', [AdminDashboardController::class, 'rentalsUpdateStatus'])->name('rentals.update');
-    Route::get('/rentals/{id}/invoice', [AdminDashboardController::class, 'rentalsInvoice'])->name('rentals.invoice');
+    // Admin Dedicated Confirmations Panel
+    Route::get('/confirmations', [AdminDashboardController::class, 'confirmationsIndex'])->name('confirmations.index');
+    Route::get('/confirmations/{id}', [AdminDashboardController::class, 'confirmationsShow'])->name('confirmations.show');
+    Route::put('/confirmations/{id}/update', [AdminDashboardController::class, 'confirmationsUpdate'])->name('confirmations.update');
 
     // Financial Reports & User Manager
     Route::get('/reports', [AdminDashboardController::class, 'reportsIndex'])->name('reports.index');

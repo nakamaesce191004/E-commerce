@@ -84,6 +84,15 @@
                                 @else bg-slate-950 text-slate-500 border border-slate-850 @endif">
                                 {{ $rent->payment_status === 'paid' ? 'Paid' : ($rent->payment_status === 'unpaid' ? 'Unpaid' : 'Expired') }}
                             </span>
+                            @if($rent->payment && $rent->payment->payment_proof)
+                                <div class="mt-1.5 flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
+                                    <i data-lucide="file-check" class="h-3.5 w-3.5 text-emerald-400"></i> Bukti Ada
+                                </div>
+                            @elseif($rent->payment_method === 'transfer')
+                                <div class="mt-1.5 flex items-center gap-1 text-[10px] text-slate-500 font-semibold">
+                                    <i data-lucide="file-warning" class="h-3.5 w-3.5 text-slate-600"></i> Belum Upload
+                                </div>
+                            @endif
                         </td>
 
                         <!-- Order Status -->

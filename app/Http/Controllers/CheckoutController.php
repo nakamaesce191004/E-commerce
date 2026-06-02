@@ -41,7 +41,6 @@ class CheckoutController extends Controller
         $request->validate([
             'phone' => 'required|string',
             'shipping_address' => 'required|string',
-            'payment_method' => 'required|in:transfer,midtrans',
             'note' => 'nullable|string'
         ]);
 
@@ -51,6 +50,7 @@ class CheckoutController extends Controller
         }
 
         $user = auth()->user();
+        $paymentMethod = 'midtrans';
 
         // Ensure user phone & address are updated if empty
         if (empty($user->phone) || empty($user->address)) {
@@ -114,7 +114,7 @@ class CheckoutController extends Controller
                 'note' => $request->note,
                 'shipping_address' => $request->shipping_address,
                 'phone' => $request->phone,
-                'payment_method' => $request->payment_method,
+                'payment_method' => $paymentMethod,
                 'payment_status' => 'unpaid'
             ]);
 
@@ -133,7 +133,7 @@ class CheckoutController extends Controller
             $payment = Payment::create([
                 'rental_id' => $rental->id,
                 'amount' => $grandTotal,
-                'payment_type' => $request->payment_method,
+                'payment_type' => $paymentMethod,
                 'transaction_id' => 'INV-' . strtoupper(uniqid()),
                 'status' => 'pending'
             ]);
@@ -143,13 +143,7 @@ class CheckoutController extends Controller
             // Clear Cart Session
             session()->forget('cart');
 
-            // Redirect based on payment type
-            if ($request->payment_method === 'midtrans') {
-                // Redirect to specialized payment portal (our custom interactive snap mock!)
-                return redirect()->route('checkout.payment', $rental->id)->with('success', 'Order sewa berhasil dibuat. Silakan selesaikan pembayaran.');
-            }
-
-            return redirect()->route('dashboard')->with('success', 'Pemesanan rental berhasil dibuat! Silakan upload bukti pembayaran untuk diverifikasi admin.');
+            return redirect()->route('checkout.payment', $rental->id)->with('success', 'Order sewa berhasil dibuat. Silakan selesaikan pembayaran melalui gateway.');
 
         } catch (\Exception $e) {
             DB::rollBack();

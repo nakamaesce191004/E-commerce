@@ -205,6 +205,12 @@
                                 <p class="text-slate-400 italic text-[11px]">"{{ $rental->note }}"</p>
                             </div>
                         @endif
+                        @if($rental->admin_note)
+                            <div class="space-y-1 bg-emerald-950/20 p-3 rounded-xl border border-emerald-900/20 mt-2">
+                                <p class="text-emerald-400 font-bold uppercase text-[9px]">Catatan Verifikasi Admin:</p>
+                                <p class="text-slate-300 text-[11px] leading-relaxed">"{{ $rental->admin_note }}"</p>
+                            </div>
+                        @endif
                         <hr class="border-slate-800">
                         <div class="flex justify-between text-sm font-bold text-white">
                             <span class="text-emerald-400">Total Tagihan:</span>

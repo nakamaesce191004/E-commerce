@@ -58,9 +58,17 @@
                     <i data-lucide="package" class="h-4.5 w-4.5"></i> Kelola Perlengkapan
                 </a>
 
-                <a href="{{ route('admin.rentals.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.rentals.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
-                    <i data-lucide="shopping-bag" class="h-4.5 w-4.5"></i> Transaksi Sewa
+                <a href="{{ route('admin.confirmations.index') }}" 
+                   class="flex items-center justify-between px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.confirmations.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
+                    <span class="flex items-center gap-3">
+                        <i data-lucide="clipboard-check" class="h-4.5 w-4.5"></i> Konfirmasi Pesanan
+                    </span>
+                    @php
+                        $pendingCount = \App\Models\Rental::where('status', 'pending')->count();
+                    @endphp
+                    @if($pendingCount > 0)
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider {{ Route::is('admin.confirmations.*') ? 'bg-slate-950 text-emerald-400' : 'bg-emerald-500 text-slate-950 shadow-sm' }}">{{ $pendingCount }}</span>
+                    @endif
                 </a>
 
                 <a href="{{ route('admin.reports.index') }}" 
