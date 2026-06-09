@@ -41,6 +41,9 @@ class CheckoutController extends Controller
         $request->validate([
             'phone' => 'required|string',
             'shipping_address' => 'required|string',
+            'ktp_name' => 'required|string|max:255',
+            'nik' => 'required|digits:16',
+            'ktp_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'note' => 'nullable|string'
         ]);
 
@@ -88,6 +91,19 @@ class CheckoutController extends Controller
         DB::beginTransaction();
 
         try {
+            $ktpPath = null;
+            if ($request->hasFile('ktp_photo')) {
+                $uploadPath = public_path('uploads/ktp');
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
+                $file = $request->file('ktp_photo');
+                $filename = 'ktp_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadPath, $filename);
+                $ktpPath = 'uploads/ktp/' . $filename;
+            }
+
             // Find overall start and end dates
             $startDates = [];
             $endDates = [];
@@ -114,6 +130,9 @@ class CheckoutController extends Controller
                 'note' => $request->note,
                 'shipping_address' => $request->shipping_address,
                 'phone' => $request->phone,
+                'ktp_name' => $request->ktp_name,
+                'nik' => $request->nik,
+                'ktp_photo' => $ktpPath,
                 'payment_method' => $paymentMethod,
                 'payment_status' => 'unpaid'
             ]);

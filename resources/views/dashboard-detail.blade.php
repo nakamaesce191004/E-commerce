@@ -196,8 +196,18 @@
                             <span class="text-white font-bold">{{ $rental->total_days }} Hari</span>
                         </div>
                         <div class="space-y-1">
-                            <p class="text-slate-500">Alamat Pengiriman:</p>
+                            <p class="text-slate-500">Pengambilan / Domisili:</p>
                             <p class="text-white leading-relaxed font-semibold">{{ $rental->shipping_address }}</p>
+                        </div>
+                        <div class="space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-900">
+                            <p class="text-slate-500 font-bold uppercase text-[9px]">Identitas Pengambil:</p>
+                            <p class="text-white font-semibold">{{ $rental->ktp_name ?? '-' }}</p>
+                            <p class="text-slate-400 font-mono text-[11px]">NIK: {{ $rental->nik ?? '-' }}</p>
+                            @if($rental->ktp_photo)
+                                <a href="{{ asset($rental->ktp_photo) }}" target="_blank" class="inline-flex items-center gap-1 text-[10px] text-emerald-400 hover:underline">
+                                    <i data-lucide="external-link" class="h-3 w-3"></i> Lihat Foto KTP
+                                </a>
+                            @endif
                         </div>
                         @if($rental->note)
                             <div class="space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-900">

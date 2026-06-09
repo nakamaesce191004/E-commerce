@@ -25,42 +25,6 @@
             </div>
         </div>
 
-        <!-- Renter Statistics Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-            <!-- Stat 1 -->
-            <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 flex justify-between items-center">
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Total Pemesanan</p>
-                    <h2 class="font-display font-extrabold text-3xl text-white">{{ $totalRentalsCount }}</h2>
-                </div>
-                <span class="p-3.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800">
-                    <i data-lucide="shopping-bag" class="h-5 w-5"></i>
-                </span>
-            </div>
-
-            <!-- Stat 2 -->
-            <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 flex justify-between items-center">
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Sewa Aktif</p>
-                    <h2 class="font-display font-extrabold text-3xl text-emerald-400">{{ $activeRentalsCount }}</h2>
-                </div>
-                <span class="p-3.5 rounded-xl bg-slate-900 text-emerald-400 border border-slate-800">
-                    <i data-lucide="calendar" class="h-5 w-5 animate-pulse"></i>
-                </span>
-            </div>
-
-            <!-- Stat 3 -->
-            <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 flex justify-between items-center">
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Total Pengeluaran</p>
-                    <h2 class="font-display font-extrabold text-3xl text-orange-500">Rp {{ number_format($totalSpent, 0, ',', '.') }}</h2>
-                </div>
-                <span class="p-3.5 rounded-xl bg-slate-900 text-orange-500 border border-slate-800">
-                    <i data-lucide="credit-card" class="h-5 w-5"></i>
-                </span>
-            </div>
-        </div>
-
         <!-- Rentals History Panel -->
         <div class="p-8 rounded-3xl bg-slate-900/10 border border-slate-900 glass">
             <h3 class="font-display font-bold text-white text-lg mb-6 flex items-center gap-2">

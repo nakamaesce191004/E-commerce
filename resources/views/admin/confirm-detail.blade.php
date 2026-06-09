@@ -21,7 +21,7 @@
         <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 glass space-y-6">
             <div class="flex items-center justify-between border-b border-slate-850 pb-3">
                 <h3 class="font-display font-bold text-white text-sm flex items-center gap-2">
-                    <i data-lucide="file-text" class="text-slate-400 h-4.5 w-4.5"></i> Detail Customer & Pengiriman
+                    <i data-lucide="file-text" class="text-slate-400 h-4.5 w-4.5"></i> Detail Customer & Pengambilan
                 </h3>
                 
                 <span class="px-2.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase bg-yellow-950 text-yellow-400 border border-yellow-500/20 flex items-center gap-1">
@@ -37,8 +37,29 @@
                     <p class="font-mono text-slate-400">WhatsApp: {{ $rental->phone }}</p>
                 </div>
                 <div class="space-y-2">
-                    <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Alamat Pengiriman / Ambil</p>
+                    <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Alamat Domisili / Ambil</p>
                     <p class="font-semibold text-white leading-relaxed">{{ $rental->shipping_address }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-900 space-y-2">
+                    <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Identitas Pengambil</p>
+                    <p class="font-bold text-white">{{ $rental->ktp_name ?? '-' }}</p>
+                    <p class="font-mono text-slate-400">NIK: {{ $rental->nik ?? '-' }}</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-900 space-y-3">
+                    <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Foto KTP</p>
+                    @if($rental->ktp_photo)
+                        <a href="{{ asset($rental->ktp_photo) }}" target="_blank" class="block rounded-lg border border-slate-800 overflow-hidden bg-slate-900 group">
+                            <img src="{{ asset($rental->ktp_photo) }}" alt="Foto KTP {{ $rental->ktp_name }}" class="h-36 w-full object-contain transition-transform duration-300 group-hover:scale-105">
+                        </a>
+                        <a href="{{ asset($rental->ktp_photo) }}" target="_blank" class="inline-flex items-center gap-1 text-[10px] text-emerald-400 hover:underline">
+                            <i data-lucide="external-link" class="h-3 w-3"></i> Buka Foto KTP
+                        </a>
+                    @else
+                        <p class="text-slate-500">Belum ada foto KTP.</p>
+                    @endif
                 </div>
             </div>
 

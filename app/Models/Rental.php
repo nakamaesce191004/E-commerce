@@ -20,6 +20,9 @@ class Rental extends Model
         'admin_note',
         'shipping_address',
         'phone',
+        'ktp_name',
+        'nik',
+        'ktp_photo',
         'payment_method',
         'payment_status'
     ];

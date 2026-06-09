@@ -11,10 +11,10 @@
             <h1 class="font-display font-extrabold text-3xl text-white flex items-center gap-3">
                 <i data-lucide="check-square" class="text-emerald-400"></i> Checkout Pemesanan
             </h1>
-            <p class="text-xs text-slate-500 mt-2">Lengkapi informasi pengiriman dan pilih metode pembayaran untuk menyelesaikan proses sewa.</p>
+            <p class="text-xs text-slate-500 mt-2">Lengkapi data pengambilan barang di toko, identitas KTP, dan metode pembayaran untuk menyelesaikan proses sewa.</p>
         </div>
 
-        <form action="{{ route('checkout.process') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <form action="{{ route('checkout.process') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             @csrf
             
             <!-- Form Inputs (Left) -->
@@ -24,7 +24,7 @@
                 <div class="p-8 rounded-2xl bg-slate-900/20 border border-slate-900 glass space-y-6">
                     <h3 class="font-display font-bold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-3">
                         <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold font-mono">1</span>
-                        Detail Kontak & Alamat Pengiriman
+                        Detail Kontak & Pengambilan di Toko
                     </h3>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -48,17 +48,46 @@
                             @error('phone')
                                 <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
                             @enderror
-                            <p class="text-[10px] text-slate-500 mt-1.5">Digunakan untuk konfirmasi pengiriman barang dan koordinasi pengembalian via WhatsApp.</p>
+                            <p class="text-[10px] text-slate-500 mt-1.5">Digunakan untuk konfirmasi jadwal pengambilan barang di toko dan koordinasi pengembalian via WhatsApp.</p>
                         </div>
 
                         <div>
-                            <label for="shipping_address" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Alamat Lengkap Pengiriman / Pengambilan</label>
-                            <textarea id="shipping_address" name="shipping_address" rows="3" required placeholder="Jl. Merdeka No. 10, RT 02/RW 03, Kel. Kebayoran, Jakarta Selatan" 
+                            <label for="shipping_address" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Alamat Domisili / Catatan Pengambilan</label>
+                            <textarea id="shipping_address" name="shipping_address" rows="3" required placeholder="Contoh: Ambil di toko. Domisili: Jl. Merdeka No. 10, Jakarta Selatan" 
                                       class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none @error('shipping_address') border-orange-500 @enderror">{{ old('shipping_address', $user->address) }}</textarea>
                             @error('shipping_address')
                                 <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
                             @enderror
-                            <p class="text-[10px] text-slate-500 mt-1.5">Tulis alamat lengkap pengiriman gear ke lokasi Anda atau ketik "AMBIL DI TOKO" jika ingin mengambil sendiri.</p>
+                            <p class="text-[10px] text-slate-500 mt-1.5">Barang diambil langsung di toko. Tulis domisili dan catatan jadwal pengambilan bila diperlukan.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="ktp_name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nama Sesuai KTP</label>
+                                <input type="text" id="ktp_name" name="ktp_name" value="{{ old('ktp_name', $user->name) }}" required placeholder="Nama lengkap sesuai KTP"
+                                       class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 @error('ktp_name') border-orange-500 @enderror">
+                                @error('ktp_name')
+                                    <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="nik" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">NIK</label>
+                                <input type="text" id="nik" name="nik" value="{{ old('nik') }}" required inputmode="numeric" maxlength="16" pattern="[0-9]{16}" placeholder="16 digit NIK"
+                                       class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 @error('nik') border-orange-500 @enderror">
+                                @error('nik')
+                                    <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="ktp_photo" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Upload Foto KTP</label>
+                            <input type="file" id="ktp_photo" name="ktp_photo" required accept="image/png,image/jpeg"
+                                   class="w-full bg-slate-950 border border-slate-800 text-xs text-white rounded-xl p-2.5 focus:border-emerald-500 focus:outline-none @error('ktp_photo') border-orange-500 @enderror">
+                            @error('ktp_photo')
+                                <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
+                            @enderror
+                            <p class="text-[10px] text-slate-500 mt-1.5">Foto KTP dipakai admin untuk mencocokkan identitas saat barang diambil di toko. Format JPG/PNG maksimal 2MB.</p>
                         </div>
 
                         <div>
