@@ -45,40 +45,30 @@
             <nav class="flex flex-col gap-1 text-xs">
                 <a href="{{ route('admin.dashboard') }}" 
                    class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.dashboard') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
-                    <i data-lucide="layout-dashboard" class="h-4.5 w-4.5"></i> Dashboard Utama
-                </a>
-
-                <a href="{{ route('admin.categories.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.categories.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
-                    <i data-lucide="folder" class="h-4.5 w-4.5"></i> Kelola Kategori
+                    <i data-lucide="layout-dashboard" class="h-4.5 w-4.5"></i> Dashboard/Overview
                 </a>
 
                 <a href="{{ route('admin.products.index') }}" 
                    class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.products.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
-                    <i data-lucide="package" class="h-4.5 w-4.5"></i> Kelola Perlengkapan
+                    <i data-lucide="package" class="h-4.5 w-4.5"></i> Inventory
                 </a>
 
-                <a href="{{ route('admin.confirmations.index') }}" 
-                   class="flex items-center justify-between px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.confirmations.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
+                <a href="{{ route('admin.bookings.index') }}" 
+                   class="flex items-center justify-between px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.bookings.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
                     <span class="flex items-center gap-3">
-                        <i data-lucide="clipboard-check" class="h-4.5 w-4.5"></i> Konfirmasi Pesanan
+                        <i data-lucide="calendar" class="h-4.5 w-4.5"></i> Booking
                     </span>
                     @php
                         $pendingCount = \App\Models\Rental::where('status', 'pending')->count();
                     @endphp
                     @if($pendingCount > 0)
-                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider {{ Route::is('admin.confirmations.*') ? 'bg-slate-950 text-emerald-400' : 'bg-emerald-500 text-slate-950 shadow-sm' }}">{{ $pendingCount }}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider {{ Route::is('admin.bookings.*') ? 'bg-slate-950 text-emerald-400' : 'bg-emerald-500 text-slate-950 shadow-sm' }}">{{ $pendingCount }}</span>
                     @endif
-                </a>
-
-                <a href="{{ route('admin.reports.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.reports.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
-                    <i data-lucide="bar-chart-3" class="h-4.5 w-4.5"></i> Laporan Keuangan
                 </a>
 
                 <a href="{{ route('admin.users.index') }}" 
                    class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all {{ Route::is('admin.users.*') ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white' }}">
-                    <i data-lucide="users" class="h-4.5 w-4.5"></i> Kelola User
+                    <i data-lucide="users" class="h-4.5 w-4.5"></i> Users
                 </a>
             </nav>
         </div>

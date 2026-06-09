@@ -65,22 +65,27 @@ class CheckoutController extends Controller
             $productId = $item['product_id'];
             $startDate = Carbon::parse($item['start_date']);
             $endDate = Carbon::parse($item['end_date']);
+            $product = Product::findOrFail($productId);
 
-            $isClashed = RentalItem::where('product_id', $productId)
-                ->whereHas('rental', function($q) use ($startDate, $endDate) {
-                    $q->whereIn('status', ['pending', 'approved', 'borrowed'])
-                      ->where(function($q2) use ($startDate, $endDate) {
-                          $q2->whereBetween('start_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                            ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                            ->orWhere(function($q3) use ($startDate, $endDate) {
-                                $q3->where('start_date', '<=', $startDate->format('Y-m-d'))
-                                   ->where('end_date', '>=', $endDate->format('Y-m-d'));
-                            });
-                      });
-                })->exists();
+            $isClashed = false;
+            $tempDate = clone $startDate;
+            for ($date = $tempDate; $date->lte($endDate); $date->addDay()) {
+                $activeBookingsCount = RentalItem::where('product_id', $productId)
+                    ->whereHas('rental', function($q) use ($date) {
+                        $q->whereIn('status', ['pending', 'approved', 'borrowed'])
+                          ->where('start_date', '<=', $date->format('Y-m-d'))
+                          ->where('end_date', '>=', $date->format('Y-m-d'));
+                    })
+                    ->sum('quantity');
+
+                if (($activeBookingsCount + 1) > $product->stock) {
+                    $isClashed = true;
+                    break;
+                }
+            }
 
             if ($isClashed) {
-                return redirect()->route('cart.index')->with('error', 'Maaf, produk "' . $item['name'] . '" sudah disewa oleh pengguna lain pada tanggal yang Anda pilih. Silakan sesuaikan keranjang Anda.');
+                return redirect()->route('cart.index')->with('error', 'Maaf, stok produk "' . $item['name'] . '" tidak mencukupi pada tanggal yang Anda pilih. Silakan sesuaikan keranjang Anda.');
             }
         }
 

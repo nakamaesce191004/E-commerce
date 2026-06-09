@@ -40,9 +40,9 @@
         <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 text-xs">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
                 <!-- Name -->
-                <div>
+                <div class="md:col-span-2">
                     <label for="name" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Nama Perlengkapan</label>
                     <input type="text" id="name" name="name" required placeholder="Sony Alpha 7 IV" 
                            class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
@@ -56,6 +56,12 @@
                         @endforeach
                     </select>
                 </div>
+                <!-- Stock -->
+                <div>
+                    <label for="stock" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Stok Unit</label>
+                    <input type="number" id="stock" name="stock" required value="5" min="1"
+                           class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
+                </div>
                 <!-- Price -->
                 <div>
                     <label for="price_per_day" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Harga Sewa / Hari (IDR)</label>
@@ -64,7 +70,13 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Denda -->
+                <div>
+                    <label for="denda_per_day" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Denda Keterlambatan / Hari (IDR)</label>
+                    <input type="number" id="denda_per_day" name="denda_per_day" required placeholder="50000" 
+                           class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
+                </div>
                 <!-- Status -->
                 <div>
                     <label for="status" class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Status Inventaris</label>
@@ -141,7 +153,9 @@
                         <th class="pb-3 w-16">Foto</th>
                         <th class="pb-3">Nama Alat</th>
                         <th class="pb-3">Kategori</th>
-                        <th class="pb-3">Harga Sewa / Hari</th>
+                        <th class="pb-3">Stok</th>
+                        <th class="pb-3">Sewa / Hari</th>
+                        <th class="pb-3">Denda / Hari</th>
                         <th class="pb-3">Rating</th>
                         <th class="pb-3">Status</th>
                         <th class="pb-3 text-right">Aksi</th>
@@ -162,11 +176,15 @@
                             </td>
                             <!-- Category -->
                             <td class="py-4 text-slate-400">{{ $prod->category->name }}</td>
+                            <!-- Stock -->
+                            <td class="py-4 font-semibold text-slate-300">{{ $prod->stock }}</td>
                             <!-- Price -->
                             <td class="py-4 font-bold text-emerald-400">Rp {{ number_format($prod->price_per_day, 0, ',', '.') }}</td>
+                            <!-- Denda -->
+                            <td class="py-4 font-semibold text-red-400">Rp {{ number_format($prod->denda_per_day, 0, ',', '.') }}</td>
                             <!-- Rating -->
-                            <td class="py-4 font-semibold text-amber-500 flex items-center gap-1 mt-3">
-                                <i data-lucide="star" class="h-3 w-3 fill-amber-500"></i> {{ $prod->rating }}
+                            <td class="py-4 font-semibold text-amber-500">
+                                <span class="flex items-center gap-1"><i data-lucide="star" class="h-3 w-3 fill-amber-500"></i> {{ $prod->rating }}</span>
                             </td>
                             <!-- Status -->
                             <td class="py-4">
@@ -203,7 +221,7 @@
 
                         <!-- 3. Edit Product Panel (Rendered dynamically below table row when clicked!) -->
                         <tr x-show="editingProduct === {{ $prod->id }}" style="display: none;" class="bg-slate-950">
-                            <td colspan="7" class="px-8 py-8 border-y border-slate-800">
+                            <td colspan="9" class="px-8 py-8 border-y border-slate-800">
                                 <div class="max-w-4xl space-y-6">
                                     <h4 class="font-display font-bold text-white text-sm border-b border-slate-850 pb-3 flex items-center gap-2">
                                         <i data-lucide="edit-3" class="text-emerald-400 h-4.5 w-4.5"></i> Edit Perlengkapan: {{ $prod->name }}
@@ -213,8 +231,8 @@
                                         @csrf
                                         @method('PUT')
 
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                            <div>
+                                        <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                                            <div class="md:col-span-2">
                                                 <label class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Nama Perlengkapan</label>
                                                 <input type="text" name="name" required value="{{ $prod->name }}" class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
                                             </div>
@@ -227,12 +245,20 @@
                                                 </select>
                                             </div>
                                             <div>
+                                                <label class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Stok Unit</label>
+                                                <input type="number" name="stock" required value="{{ $prod->stock }}" min="0" class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
+                                            </div>
+                                            <div>
                                                 <label class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Harga Sewa / Hari (IDR)</label>
                                                 <input type="number" name="price_per_day" required value="{{ (int)$prod->price_per_day }}" class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                            <div>
+                                                <label class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Denda / Hari (IDR)</label>
+                                                <input type="number" name="denda_per_day" required value="{{ (int)$prod->denda_per_day }}" class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">
+                                            </div>
                                             <div>
                                                 <label class="block font-semibold text-slate-400 uppercase tracking-wider mb-2">Status Inventaris</label>
                                                 <select name="status" required class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none">

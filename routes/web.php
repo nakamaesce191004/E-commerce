@@ -80,6 +80,19 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/confirmations/{id}', [AdminDashboardController::class, 'confirmationsShow'])->name('confirmations.show');
     Route::put('/confirmations/{id}/update', [AdminDashboardController::class, 'confirmationsUpdate'])->name('confirmations.update');
 
+    // Admin Bookings Management
+    Route::get('/bookings', [AdminDashboardController::class, 'bookingsIndex'])->name('bookings.index');
+    Route::get('/bookings/create', [AdminDashboardController::class, 'createBooking'])->name('bookings.create');
+    Route::post('/bookings/store', [AdminDashboardController::class, 'storeBooking'])->name('bookings.store');
+    Route::get('/bookings/{id}', [AdminDashboardController::class, 'bookingsShow'])->name('bookings.show');
+    Route::put('/bookings/{id}/update', [AdminDashboardController::class, 'rentalsUpdateStatus'])->name('bookings.update');
+
+    // Admin Rentals Legacy/Dashboard Support
+    Route::get('/rentals', [AdminDashboardController::class, 'rentalsIndex'])->name('rentals.index');
+    Route::get('/rentals/{id}', [AdminDashboardController::class, 'rentalsShow'])->name('rentals.show');
+    Route::put('/rentals/{id}', [AdminDashboardController::class, 'rentalsUpdateStatus'])->name('rentals.update');
+    Route::get('/rentals/{id}/invoice', [AdminDashboardController::class, 'rentalsInvoice'])->name('rentals.invoice');
+
     // Financial Reports & User Manager
     Route::get('/reports', [AdminDashboardController::class, 'reportsIndex'])->name('reports.index');
     Route::get('/users', [AdminDashboardController::class, 'usersIndex'])->name('users.index');

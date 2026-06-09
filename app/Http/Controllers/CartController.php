@@ -47,22 +47,26 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Produk ini sedang tidak tersedia untuk disewa saat ini.');
         }
 
-        // --- CHECK DATE CONFLICT / DOUBLE BOOKING ---
-        $isClashed = RentalItem::where('product_id', $productId)
-            ->whereHas('rental', function($q) use ($startDate, $endDate) {
-                $q->whereIn('status', ['pending', 'approved', 'borrowed'])
-                  ->where(function($q2) use ($startDate, $endDate) {
-                      $q2->whereBetween('start_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                        ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                        ->orWhere(function($q3) use ($startDate, $endDate) {
-                            $q3->where('start_date', '<=', $startDate->format('Y-m-d'))
-                               ->where('end_date', '>=', $endDate->format('Y-m-d'));
-                        });
-                  });
-            })->exists();
+        // --- CHECK DATE CONFLICT / DOUBLE BOOKING WITH STOCK-AWARENESS ---
+        $isClashed = false;
+        $tempDate = clone $startDate;
+        for ($date = $tempDate; $date->lte($endDate); $date->addDay()) {
+            $activeBookingsCount = RentalItem::where('product_id', $productId)
+                ->whereHas('rental', function($q) use ($date) {
+                    $q->whereIn('status', ['pending', 'approved', 'borrowed'])
+                      ->where('start_date', '<=', $date->format('Y-m-d'))
+                      ->where('end_date', '>=', $date->format('Y-m-d'));
+                })
+                ->sum('quantity');
+
+            if (($activeBookingsCount + 1) > $product->stock) {
+                $isClashed = true;
+                break;
+            }
+        }
 
         if ($isClashed) {
-            return redirect()->back()->with('error', 'Maaf, peralatan ini sudah disewa pengguna lain pada tanggal tersebut. Silakan pilih tanggal lain.');
+            return redirect()->back()->with('error', 'Maaf, stok peralatan ini tidak mencukupi pada tanggal tersebut karena sudah disewa oleh pengguna lain. Silakan pilih tanggal lain.');
         }
 
         // Setup Cart Item

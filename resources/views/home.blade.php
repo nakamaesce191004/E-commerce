@@ -211,9 +211,21 @@
                                     {{ $product->name }}
                                 </h3>
                             </a>
-                            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-3">
                                 {{ $product->description }}
                             </p>
+
+                            <!-- Stock & Denda Info -->
+                            <div class="grid grid-cols-2 gap-2 mb-4 p-2 bg-slate-950/40 rounded-lg border border-slate-900 text-[10px]">
+                                <div class="flex items-center gap-1.5 text-slate-400">
+                                    <i data-lucide="package" class="h-3.5 w-3.5 text-emerald-500"></i>
+                                    <span>Stok: <strong class="text-slate-200">{{ $product->stock }} unit</strong></span>
+                                </div>
+                                <div class="flex items-center gap-1.5 text-slate-400">
+                                    <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-rose-500"></i>
+                                    <span>Denda: <strong class="text-rose-400">Rp{{ number_format($product->denda_per_day, 0, ',', '.') }}/h</strong></span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between border-t border-slate-900 pt-4 mt-auto">

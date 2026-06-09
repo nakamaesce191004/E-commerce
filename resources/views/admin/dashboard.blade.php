@@ -30,25 +30,25 @@
         </span>
     </div>
 
-    <!-- Stat 3: Total Products -->
+    <!-- Stat 3: Item Outs -->
     <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
         <div>
-            <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">Total Produk Inventaris</p>
-            <h3 class="font-display font-extrabold text-2xl text-white">{{ $totalProductsCount }}</h3>
+            <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">Item Outs (Barang Keluar)</p>
+            <h3 class="font-display font-extrabold text-2xl text-purple-400">{{ $itemOutsCount }}</h3>
         </div>
         <span class="p-3 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
-            <i data-lucide="package" class="h-6 w-6"></i>
+            <i data-lucide="arrow-up-right" class="h-6 w-6"></i>
         </span>
     </div>
 
-    <!-- Stat 4: Total Customers -->
+    <!-- Stat 4: New Customers -->
     <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
         <div>
-            <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">Total Customer Aktif</p>
-            <h3 class="font-display font-extrabold text-2xl text-orange-500">{{ $totalUsersCount }}</h3>
+            <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">New Customers (30 Hari)</p>
+            <h3 class="font-display font-extrabold text-2xl text-orange-400">{{ $newCustomersCount }}</h3>
         </div>
         <span class="p-3 rounded-xl bg-orange-500/10 text-orange-500 border border-orange-500/20">
-            <i data-lucide="users" class="h-6 w-6"></i>
+            <i data-lucide="user-plus" class="h-6 w-6"></i>
         </span>
     </div>
 </div>

@@ -34,8 +34,12 @@ class AdminDashboardController extends Controller
         // 1. Calculate stats
         $totalRevenue = Rental::where('payment_status', 'paid')->sum('total_price');
         $activeRentalsCount = Rental::whereIn('status', ['approved', 'borrowed'])->count();
-        $totalProductsCount = Product::count();
-        $totalUsersCount = User::where('role', 'customer')->count();
+        $itemOutsCount = \App\Models\RentalItem::whereHas('rental', function($q) {
+            $q->where('status', 'borrowed');
+        })->sum('quantity');
+        $newCustomersCount = User::where('role', 'customer')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->count();
 
         // 2. Get recent transactions
         $recentTransactions = Rental::with(['user', 'payment'])
@@ -79,8 +83,8 @@ class AdminDashboardController extends Controller
         return view('admin.dashboard', compact(
             'totalRevenue', 
             'activeRentalsCount', 
-            'totalProductsCount', 
-            'totalUsersCount',
+            'itemOutsCount', 
+            'newCustomersCount',
             'recentTransactions',
             'chartLabels',
             'chartValues',
@@ -161,6 +165,8 @@ class AdminDashboardController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price_per_day' => 'required|numeric|min:0',
+            'denda_per_day' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
             'description' => 'required|string',
             'status' => 'required|in:available,unavailable,maintenance',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -200,6 +206,8 @@ class AdminDashboardController extends Controller
             'slug' => Str::slug($request->name) . '-' . rand(1000, 9999),
             'category_id' => $request->category_id,
             'price_per_day' => $request->price_per_day,
+            'denda_per_day' => $request->denda_per_day,
+            'stock' => $request->stock,
             'description' => $request->description,
             'status' => $request->status,
             'thumbnail' => $thumbPath,
@@ -219,6 +227,8 @@ class AdminDashboardController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price_per_day' => 'required|numeric|min:0',
+            'denda_per_day' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
             'description' => 'required|string',
             'status' => 'required|in:available,unavailable,maintenance',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -266,6 +276,8 @@ class AdminDashboardController extends Controller
             'name' => $request->name,
             'category_id' => $request->category_id,
             'price_per_day' => $request->price_per_day,
+            'denda_per_day' => $request->denda_per_day,
+            'stock' => $request->stock,
             'description' => $request->description,
             'status' => $request->status,
             'thumbnail' => $thumbPath,
@@ -489,5 +501,129 @@ class AdminDashboardController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal memverifikasi: ' . $e->getMessage());
         }
+    }
+
+    /* =========================================================================
+       ADMIN BOOKINGS MANAGEMENT
+       ========================================================================= */
+
+    public function bookingsIndex(Request $request)
+    {
+        $query = \App\Models\RentalItem::with(['rental.user', 'product']);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($sub) use ($search) {
+                $sub->whereHas('rental.user', function($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%');
+                })
+                ->orWhere('product_id', $search)
+                ->orWhereHas('product', function($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%');
+                });
+            });
+        }
+
+        $bookings = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('admin.booking.index', compact('bookings'));
+    }
+
+    public function createBooking()
+    {
+        $customers = User::where('role', 'customer')->orderBy('name', 'asc')->get();
+        $products = Product::where('status', 'available')->orderBy('name', 'asc')->get();
+        return view('admin.booking.create', compact('customers', 'products'));
+    }
+
+    public function storeBooking(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'product_id' => 'required|exists:products,id',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'note' => 'nullable|string'
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $product = Product::findOrFail($request->product_id);
+        
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+        $totalPrice = $product->price_per_day * $totalDays;
+
+        // Perform stock validation day-by-day
+        $isClashed = false;
+        $tempDate = clone $startDate;
+        for ($date = $tempDate; $date->lte($endDate); $date->addDay()) {
+            $activeBookingsCount = \App\Models\RentalItem::where('product_id', $product->id)
+                ->whereHas('rental', function($q) use ($date) {
+                    $q->whereIn('status', ['pending', 'approved', 'borrowed'])
+                      ->where('start_date', '<=', $date->format('Y-m-d'))
+                      ->where('end_date', '>=', $date->format('Y-m-d'));
+                })
+                ->sum('quantity');
+
+            if (($activeBookingsCount + 1) > $product->stock) {
+                $isClashed = true;
+                break;
+            }
+        }
+
+        if ($isClashed) {
+            return redirect()->back()->withInput()->with('error', 'Stok alat "' . $product->name . '" tidak mencukupi untuk periode tanggal tersebut.');
+        }
+
+        DB::beginTransaction();
+        try {
+            // 1. Create Rental Record
+            $rental = Rental::create([
+                'user_id' => $user->id,
+                'start_date' => $startDate->format('Y-m-d'),
+                'end_date' => $endDate->format('Y-m-d'),
+                'total_days' => $totalDays,
+                'total_price' => $totalPrice,
+                'status' => 'approved', // Admin booking auto-approved
+                'note' => $request->note ?? 'Booking dibuat oleh Admin',
+                'shipping_address' => $user->address ?? 'Ambil di Toko',
+                'phone' => $user->phone ?? '-',
+                'payment_method' => 'transfer',
+                'payment_status' => 'paid'
+            ]);
+
+            // 2. Create Rental Item Record
+            $item = \App\Models\RentalItem::create([
+                'rental_id' => $rental->id,
+                'product_id' => $product->id,
+                'price_per_day' => $product->price_per_day,
+                'quantity' => 1,
+                'subtotal' => $totalPrice
+            ]);
+
+            // 3. Create Payment Record
+            \App\Models\Payment::create([
+                'rental_id' => $rental->id,
+                'amount' => $totalPrice,
+                'payment_type' => 'transfer',
+                'transaction_id' => 'INV-ADM-' . strtoupper(uniqid()),
+                'status' => 'settled'
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.bookings.index')->with('success', 'Booking baru berhasil dibuat oleh Admin!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function bookingsShow($id)
+    {
+        // Load by rental ID
+        $rental = Rental::with(['user', 'items.product.category', 'payment'])->findOrFail($id);
+        return view('admin.booking.show', compact('rental'));
     }
 }

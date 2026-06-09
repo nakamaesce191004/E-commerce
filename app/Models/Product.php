@@ -16,8 +16,10 @@ class Product extends Model
         'description',
         'specifications',
         'price_per_day',
+        'denda_per_day',
         'rating',
         'status',
+        'stock',
         'thumbnail',
         'gallery'
     ];
@@ -26,7 +28,9 @@ class Product extends Model
         'specifications' => 'array',
         'gallery' => 'array',
         'price_per_day' => 'decimal:2',
-        'rating' => 'decimal:2'
+        'denda_per_day' => 'decimal:2',
+        'rating' => 'decimal:2',
+        'stock' => 'integer'
     ];
 
     public function getThumbnailUrlAttribute(): ?string

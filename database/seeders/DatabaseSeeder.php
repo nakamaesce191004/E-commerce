@@ -320,6 +320,9 @@ class DatabaseSeeder extends Seeder
             $catSlug = $prod['category_slug'];
             unset($prod['category_slug']);
 
+            $prod['stock'] = $prod['stock'] ?? 5;
+            $prod['denda_per_day'] = $prod['denda_per_day'] ?? (round($prod['price_per_day'] * 0.20 / 5000) * 5000); // 20% of price rounded to nearest 5000
+
             $category = $categories[$catSlug];
             $product = $category->products()->create($prod);
 

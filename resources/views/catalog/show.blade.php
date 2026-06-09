@@ -115,6 +115,28 @@
                     @endauth
                 </div>
 
+                <!-- Stock & Denda details -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-900/20 border border-slate-900 flex items-center gap-3">
+                        <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                            <i data-lucide="package" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">Stok Tersedia</p>
+                            <p class="text-sm font-extrabold text-slate-200">{{ $product->stock }} Unit</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/20 border border-slate-900 flex items-center gap-3">
+                        <div class="p-2.5 rounded-lg bg-rose-500/10 text-rose-400">
+                            <i data-lucide="alert-triangle" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">Denda Keterlambatan</p>
+                            <p class="text-sm font-extrabold text-rose-400">Rp {{ number_format($product->denda_per_day, 0, ',', '.') }} <span class="text-[10px] font-normal text-slate-500">/ Hari</span></p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Booking Input Widget Form (Flatpickr & JS Calc) -->
                 @if($product->status === 'available')
                     <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl glass space-y-6" x-data="{ dateSelected: false }">
