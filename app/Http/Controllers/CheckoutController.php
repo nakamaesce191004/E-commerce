@@ -40,11 +40,9 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'phone' => 'required|string',
-            'shipping_address' => 'required|string',
             'ktp_name' => 'required|string|max:255',
             'nik' => 'required|digits:16',
-            'ktp_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'note' => 'nullable|string'
+            'ktp_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         $cart = session('cart', []);
@@ -55,11 +53,10 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $paymentMethod = 'midtrans';
 
-        // Ensure user phone & address are updated if empty
-        if (empty($user->phone) || empty($user->address)) {
+        // Ensure user phone is updated if empty
+        if (empty($user->phone)) {
             $user->update([
-                'phone' => $request->phone,
-                'address' => $request->shipping_address
+                'phone' => $request->phone
             ]);
         }
 
@@ -127,8 +124,6 @@ class CheckoutController extends Controller
                 'total_days' => $totalDays,
                 'total_price' => $grandTotal,
                 'status' => 'pending',
-                'note' => $request->note,
-                'shipping_address' => $request->shipping_address,
                 'phone' => $request->phone,
                 'ktp_name' => $request->ktp_name,
                 'nik' => $request->nik,

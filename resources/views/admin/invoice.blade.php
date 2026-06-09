@@ -72,8 +72,7 @@
             </div>
             
             <div class="space-y-2">
-                <p class="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Pengambilan / Domisili</p>
-                <p class="text-slate-700 font-semibold leading-relaxed">{{ $rental->shipping_address }}</p>
+                <p class="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Periode Sewa</p>
                 <div class="pt-2 text-[10px] text-slate-500 flex gap-2">
                     <span>Mulai: <strong class="text-slate-800">{{ $rental->start_date->format('d M Y') }}</strong></span>
                     <span>|</span>

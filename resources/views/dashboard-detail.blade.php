@@ -20,80 +20,77 @@
             <!-- Details & Items List (Left) -->
             <div class="lg:col-span-8 space-y-6">
                 
-                <!-- Order Timeline Tracker -->
-                <div class="p-6 rounded-2xl bg-slate-900/30 border border-slate-900 glass">
-                    <h3 class="font-display font-bold text-white text-sm mb-6 flex items-center gap-2">
-                        <i data-lucide="git-commit" class="text-slate-400 h-4.5 w-4.5"></i> Status Perjalanan Rental
-                    </h3>
-                    
-                    <!-- Steps Timeline -->
-                    <div class="grid grid-cols-5 gap-3 text-center text-[10px]">
-                        <!-- Step 1 -->
-                        <div class="space-y-2">
-                            <div class="h-8 w-8 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center mx-auto ring-4 ring-emerald-500/10">
-                                <i data-lucide="file-text" class="h-4 w-4"></i>
-                            </div>
-                            <p class="font-semibold text-white">Pending</p>
-                            <p class="text-[9px] text-slate-500">Order Dibuat</p>
+                <!-- Return Notification -->
+                @php
+                    $returnDueAt = $rental->end_date->copy()->endOfDay();
+                    $notificationAt = $returnDueAt->copy()->addHours(3);
+                    $isLateReturn = $rental->status === 'borrowed' && now()->greaterThanOrEqualTo($notificationAt);
+                    $lateHours = $isLateReturn ? floor($notificationAt->diffInHours(now())) : 0;
+                @endphp
+                <div class="p-6 rounded-2xl border glass
+                    @if($isLateReturn)
+                        bg-red-950/20 border-red-500/30
+                    @else
+                        bg-slate-900/30 border-slate-900
+                    @endif">
+                    <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <div class="h-11 w-11 rounded-full flex items-center justify-center flex-shrink-0
+                            @if($isLateReturn)
+                                bg-red-500/10 text-red-400 ring-4 ring-red-500/10
+                            @else
+                                bg-emerald-500/10 text-emerald-400 ring-4 ring-emerald-500/10
+                            @endif">
+                            <i data-lucide="{{ $isLateReturn ? 'bell-ring' : 'bell' }}" class="h-5 w-5"></i>
                         </div>
 
-                        <!-- Step 2 -->
-                        <div class="space-y-2">
-                            <div class="h-8 w-8 rounded-full flex items-center justify-center mx-auto transition-all
-                                @if(in_array($rental->status, ['approved', 'borrowed', 'completed']))
-                                    bg-emerald-500 text-slate-950 ring-4 ring-emerald-500/10
-                                @else
-                                    bg-slate-900 text-slate-500 border border-slate-800
-                                @endif">
-                                <i data-lucide="shield-check" class="h-4 w-4"></i>
+                        <div class="space-y-3 flex-1">
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-wider {{ $isLateReturn ? 'text-red-300' : 'text-slate-500' }}">Notifikasi Pengembalian</p>
+                                <h3 class="font-display font-bold text-white text-base mt-1">
+                                    @if($isLateReturn)
+                                        Barang belum dikembalikan lebih dari 3 jam
+                                    @elseif($rental->status === 'completed')
+                                        Barang sudah dikembalikan
+                                    @elseif($rental->status === 'borrowed')
+                                        Belum ada keterlambatan pengembalian
+                                    @else
+                                        Pengingat pengembalian aktif setelah barang dipinjam
+                                    @endif
+                                </h3>
                             </div>
-                            <p class="font-semibold @if(in_array($rental->status, ['approved', 'borrowed', 'completed'])) text-white @else text-slate-500 @endif">Disetujui</p>
-                            <p class="text-[9px] text-slate-500">Diverifikasi Admin</p>
-                        </div>
 
-                        <!-- Step 3 -->
-                        <div class="space-y-2">
-                            <div class="h-8 w-8 rounded-full flex items-center justify-center mx-auto transition-all
-                                @if(in_array($rental->status, ['borrowed', 'completed']))
-                                    bg-emerald-500 text-slate-950 ring-4 ring-emerald-500/10
+                            <p class="text-xs leading-relaxed {{ $isLateReturn ? 'text-red-100/80' : 'text-slate-400' }}">
+                                @if($isLateReturn)
+                                    Batas pengembalian adalah {{ $returnDueAt->format('d M Y H:i') }}. Karena sudah melewati toleransi sampai {{ $notificationAt->format('d M Y H:i') }}, segera hubungi admin atau kembalikan barang ke toko.
+                                @elseif($rental->status === 'borrowed')
+                                    Notifikasi keterlambatan akan muncul jika barang belum dikembalikan 3 jam setelah batas pengembalian, yaitu {{ $notificationAt->format('d M Y H:i') }}.
+                                @elseif($rental->status === 'completed')
+                                    Terima kasih, status transaksi ini sudah selesai dan barang telah diterima kembali oleh admin.
                                 @else
-                                    bg-slate-900 text-slate-500 border border-slate-800
-                                @endif">
-                                <i data-lucide="truck" class="h-4 w-4"></i>
-                            </div>
-                            <p class="font-semibold @if(in_array($rental->status, ['borrowed', 'completed'])) text-white @else text-slate-500 @endif">Dipinjam</p>
-                            <p class="text-[9px] text-slate-500">Barang Digunakan</p>
-                        </div>
+                                    Setelah status berubah menjadi dipinjam, sistem akan memantau batas pengembalian berdasarkan tanggal selesai sewa.
+                                @endif
+                            </p>
 
-                        <!-- Step 4 -->
-                        <div class="space-y-2">
-                            <div class="h-8 w-8 rounded-full flex items-center justify-center mx-auto transition-all
-                                @if($rental->status === 'completed')
-                                    bg-emerald-500 text-slate-950 ring-4 ring-emerald-500/10
-                                @else
-                                    bg-slate-900 text-slate-500 border border-slate-800
-                                @endif">
-                                <i data-lucide="archive" class="h-4 w-4"></i>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-900">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Status</p>
+                                    <p class="mt-1 font-bold text-white">
+                                        @if($rental->status === 'pending') Menunggu @elseif($rental->status === 'approved') Disetujui @elseif($rental->status === 'borrowed') Dipinjam @elseif($rental->status === 'completed') Selesai @else Ditolak @endif
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-900">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Batas Kembali</p>
+                                    <p class="mt-1 font-bold text-white">{{ $returnDueAt->format('d M Y H:i') }}</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-900">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Notifikasi</p>
+                                    <p class="mt-1 font-bold {{ $isLateReturn ? 'text-red-300' : 'text-emerald-400' }}">
+                                        {{ $isLateReturn ? '+' . $lateHours . ' Jam' : $notificationAt->format('d M H:i') }}
+                                    </p>
+                                </div>
                             </div>
-                            <p class="font-semibold @if($rental->status === 'completed') text-white @else text-slate-500 @endif">Selesai</p>
-                            <p class="text-[9px] text-slate-500">Barang Kembali</p>
-                        </div>
-
-                        <!-- Step 5: Rejected Status (Only shown if status rejected) -->
-                        <div class="space-y-2">
-                            <div class="h-8 w-8 rounded-full flex items-center justify-center mx-auto transition-all
-                                @if($rental->status === 'rejected')
-                                    bg-red-500 text-slate-950 ring-4 ring-red-500/10
-                                @else
-                                    bg-slate-900 text-slate-500 border border-slate-800
-                                @endif">
-                                <i data-lucide="x" class="h-4 w-4"></i>
-                            </div>
-                            <p class="font-semibold @if($rental->status === 'rejected') text-red-400 @else text-slate-500 @endif">Ditolak</p>
-                            <p class="text-[9px] text-slate-500">Order Dibatalkan</p>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Products hired list -->
@@ -195,10 +192,6 @@
                             <span class="text-slate-500">Durasi:</span>
                             <span class="text-white font-bold">{{ $rental->total_days }} Hari</span>
                         </div>
-                        <div class="space-y-1">
-                            <p class="text-slate-500">Pengambilan / Domisili:</p>
-                            <p class="text-white leading-relaxed font-semibold">{{ $rental->shipping_address }}</p>
-                        </div>
                         <div class="space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-900">
                             <p class="text-slate-500 font-bold uppercase text-[9px]">Identitas Pengambil:</p>
                             <p class="text-white font-semibold">{{ $rental->ktp_name ?? '-' }}</p>
@@ -209,12 +202,6 @@
                                 </a>
                             @endif
                         </div>
-                        @if($rental->note)
-                            <div class="space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-900">
-                                <p class="text-slate-500 font-bold uppercase text-[9px]">Catatan Anda:</p>
-                                <p class="text-slate-400 italic text-[11px]">"{{ $rental->note }}"</p>
-                            </div>
-                        @endif
                         @if($rental->admin_note)
                             <div class="space-y-1 bg-emerald-950/20 p-3 rounded-xl border border-emerald-900/20 mt-2">
                                 <p class="text-emerald-400 font-bold uppercase text-[9px]">Catatan Verifikasi Admin:</p>

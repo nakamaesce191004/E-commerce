@@ -30,16 +30,12 @@
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-slate-300">
+            <div class="grid grid-cols-1 gap-6 text-xs text-slate-300">
                 <div class="space-y-2">
                     <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Rincian Customer</p>
                     <p class="font-bold text-white text-sm">{{ $rental->user->name }}</p>
                     <p class="font-mono text-slate-400">{{ $rental->user->email }}</p>
                     <p class="font-mono text-slate-400">WA Hotline: {{ $rental->phone }}</p>
-                </div>
-                <div class="space-y-2">
-                    <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Alamat Domisili / Ambil</p>
-                    <p class="font-semibold text-white leading-relaxed">{{ $rental->shipping_address }}</p>
                 </div>
             </div>
 
@@ -63,13 +59,6 @@
                     @endif
                 </div>
             </div>
-
-            @if($rental->note)
-                <div class="p-4 rounded-xl bg-slate-950 border border-slate-900 text-xs">
-                    <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider mb-1">Catatan Tambahan Customer</p>
-                    <p class="text-slate-300 italic font-mono">"{{ $rental->note }}"</p>
-                </div>
-            @endif
 
             @if($rental->admin_note)
                 <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-900/30 text-xs mt-3">

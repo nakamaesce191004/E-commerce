@@ -51,16 +51,6 @@
                             <p class="text-[10px] text-slate-500 mt-1.5">Digunakan untuk konfirmasi jadwal pengambilan barang di toko dan koordinasi pengembalian via WhatsApp.</p>
                         </div>
 
-                        <div>
-                            <label for="shipping_address" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Alamat Domisili / Catatan Pengambilan</label>
-                            <textarea id="shipping_address" name="shipping_address" rows="3" required placeholder="Contoh: Ambil di toko. Domisili: Jl. Merdeka No. 10, Jakarta Selatan" 
-                                      class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none @error('shipping_address') border-orange-500 @enderror">{{ old('shipping_address', $user->address) }}</textarea>
-                            @error('shipping_address')
-                                <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
-                            @enderror
-                            <p class="text-[10px] text-slate-500 mt-1.5">Barang diambil langsung di toko. Tulis domisili dan catatan jadwal pengambilan bila diperlukan.</p>
-                        </div>
-
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <label for="ktp_name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nama Sesuai KTP</label>
@@ -88,12 +78,6 @@
                                 <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
                             @enderror
                             <p class="text-[10px] text-slate-500 mt-1.5">Foto KTP dipakai admin untuk mencocokkan identitas saat barang diambil di toko. Format JPG/PNG maksimal 2MB.</p>
-                        </div>
-
-                        <div>
-                            <label for="note" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Catatan Tambahan (Opsional)</label>
-                            <input type="text" id="note" name="note" value="{{ old('note') }}" placeholder="Contoh: Tolong kirim sebelum jam 9 pagi atau baterai kamera mohon dicharge penuh." 
-                                   class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                         </div>
                     </div>
                 </div>

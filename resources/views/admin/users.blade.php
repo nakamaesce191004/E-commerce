@@ -18,7 +18,6 @@
                     <th class="pb-3 w-12 text-center">ID</th>
                     <th class="pb-3">Nama Customer</th>
                     <th class="pb-3">Nomor Kontak / WA</th>
-                    <th class="pb-3">Alamat Rumah Terdaftar</th>
                     <th class="pb-3 text-center">Frekuensi Sewa</th>
                     <th class="pb-3">Tanggal Bergabung</th>
                 </tr>
@@ -38,11 +37,6 @@
                         <!-- Phone -->
                         <td class="py-4 font-mono text-slate-300">{{ $user->phone ?? '-' }}</td>
 
-                        <!-- Address -->
-                        <td class="py-4 text-slate-400 max-w-xs truncate" title="{{ $user->address ?? 'Belum mengisi' }}">
-                            {{ $user->address ?? 'Belum mengisi alamat' }}
-                        </td>
-
                         <!-- Rental Count -->
                         <td class="py-4 text-center">
                             <span class="px-2 py-0.5 rounded font-bold bg-slate-950 border border-slate-850 text-slate-300">
@@ -55,7 +49,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-6 text-slate-500">Belum ada akun customer yang mendaftar.</td>
+                        <td colspan="5" class="text-center py-6 text-slate-500">Belum ada akun customer yang mendaftar.</td>
                     </tr>
                 @endforelse
             </tbody>
