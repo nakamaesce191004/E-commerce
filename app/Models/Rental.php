@@ -13,6 +13,8 @@ class Rental extends Model
         'user_id',
         'start_date',
         'end_date',
+        'start_at',
+        'end_at',
         'total_days',
         'total_price',
         'status',
@@ -30,6 +32,8 @@ class Rental extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'start_at' => 'datetime',
+        'end_at' => 'datetime',
         'total_days' => 'integer',
         'total_price' => 'decimal:2'
     ];

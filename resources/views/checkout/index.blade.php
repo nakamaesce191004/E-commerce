@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="flex justify-between text-[10px] text-slate-500">
                                     <span>Periode: {{ $item['total_days'] }} Hari</span>
-                                    <span>{{ \Carbon\Carbon::parse($item['start_date'])->format('d M') }} - {{ \Carbon\Carbon::parse($item['end_date'])->format('d M') }}</span>
+                                    <span>{{ !empty($item['start_at']) ? \Carbon\Carbon::parse($item['start_at'])->format('d M Y H:i') : \Carbon\Carbon::parse($item['start_date'])->format('d M') }} - {{ !empty($item['end_at']) ? \Carbon\Carbon::parse($item['end_at'])->format('d M Y H:i') : \Carbon\Carbon::parse($item['end_date'])->format('d M') }}</span>
                                 </div>
                             </div>
                         @endforeach

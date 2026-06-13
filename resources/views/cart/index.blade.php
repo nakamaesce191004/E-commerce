@@ -40,9 +40,9 @@
                             <!-- Renting Period Details -->
                             <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-900 grid grid-cols-2 gap-x-6 gap-y-1 text-[11px] w-full sm:w-auto">
                                 <div class="text-slate-500">Mulai:</div>
-                                <div class="text-white font-bold">{{ \Carbon\Carbon::parse($item['start_date'])->format('d M Y') }}</div>
+                                <div class="text-white font-bold">{{ !empty($item['start_at']) ? \Carbon\Carbon::parse($item['start_at'])->format('d M Y H:i') : \Carbon\Carbon::parse($item['start_date'])->format('d M Y') }}</div>
                                 <div class="text-slate-500">Selesai:</div>
-                                <div class="text-white font-bold">{{ \Carbon\Carbon::parse($item['end_date'])->format('d M Y') }}</div>
+                                <div class="text-white font-bold">{{ !empty($item['end_at']) ? \Carbon\Carbon::parse($item['end_at'])->format('d M Y H:i') : \Carbon\Carbon::parse($item['end_date'])->format('d M Y') }}</div>
                                 <div class="text-slate-500">Durasi:</div>
                                 <div class="text-emerald-400 font-extrabold">{{ $item['total_days'] }} Hari</div>
                             </div>

@@ -32,13 +32,15 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_date' => 'required|date_format:Y-m-d H:i|after_or_equal:now',
+            'end_date' => 'required|date_format:Y-m-d H:i|after_or_equal:start_date',
         ]);
 
         $productId = $request->product_id;
-        $startDate = Carbon::parse($request->start_date);
-        $endDate = Carbon::parse($request->end_date);
+        $startAt = Carbon::parse($request->start_date);
+        $endAt = Carbon::parse($request->end_date);
+        $startDate = $startAt->copy()->startOfDay();
+        $endDate = $endAt->copy()->startOfDay();
         $totalDays = $startDate->diffInDays($endDate) + 1; // inclusive of start/end days
 
         $product = Product::findOrFail($productId);
@@ -80,6 +82,8 @@ class CartController extends Controller
             'price_per_day' => $product->price_per_day,
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
+            'start_at' => $startAt->format('Y-m-d H:i:s'),
+            'end_at' => $endAt->format('Y-m-d H:i:s'),
             'total_days' => $totalDays,
             'subtotal' => $product->price_per_day * $totalDays
         ];

@@ -20,8 +20,8 @@
         <form action="{{ route('admin.confirmations.index') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full xl:w-auto text-xs">
             <!-- Search -->
             <div class="relative w-full sm:w-72">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama pelanggan, email, ID sewa..." 
-                       class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama pelanggan, email, ID sewa..." 
+                      class="icon-input w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                 <i data-lucide="search" class="absolute left-3.5 top-3 h-3.5 w-3.5 text-slate-500"></i>
             </div>
 

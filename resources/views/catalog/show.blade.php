@@ -150,18 +150,18 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="start_date" class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Tanggal Mulai</label>
+                                    <label for="start_date" class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Tanggal & Jam Mulai</label>
                                     <div class="relative">
-                                        <input type="text" name="start_date" id="start_date" required placeholder="Pilih Tanggal" 
-                                               class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer">
+                                             <input type="text" name="start_date" id="start_date" required placeholder="Pilih Tanggal & Jam" 
+                                                 class="icon-input w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer">
                                         <i data-lucide="calendar" class="absolute left-3.5 top-3 h-4 w-4 text-slate-500 pointer-events-none"></i>
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="end_date" class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Tanggal Selesai</label>
+                                    <label for="end_date" class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Tanggal & Jam Selesai</label>
                                     <div class="relative">
-                                        <input type="text" name="end_date" id="end_date" required placeholder="Pilih Tanggal" 
-                                               class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer">
+                                             <input type="text" name="end_date" id="end_date" required placeholder="Pilih Tanggal & Jam" 
+                                                 class="icon-input w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer">
                                         <i data-lucide="calendar" class="absolute left-3.5 top-3 h-4 w-4 text-slate-500 pointer-events-none"></i>
                                     </div>
                                 </div>
@@ -339,9 +339,12 @@
         const flatpickrConfig = {
             minDate: "today",
             disable: blockedDates,
-            dateFormat: "Y-m-d",
+            enableTime: true,
+            time_24hr: true,
+            minuteIncrement: 30,
+            dateFormat: "Y-m-d H:i",
             altInput: true,
-            altFormat: "F j, Y",
+            altFormat: "d M Y H:i",
             locale: {
                 firstDayOfWeek: 1
             },
@@ -366,8 +369,8 @@
         endFlat = flatpickr("#end_date", flatpickrConfig);
 
         function calculateCost() {
-            const startVal = document.getElementById('start_date').value;
-            const endVal = document.getElementById('end_date').value;
+            const startVal = startFlat?.selectedDates?.[0] || null;
+            const endVal = endFlat?.selectedDates?.[0] || null;
             const calcBox = document.getElementById('cost-calc-box');
             const calcDuration = document.getElementById('calc-duration');
             const calcTotal = document.getElementById('calc-total');

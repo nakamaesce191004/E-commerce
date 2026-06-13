@@ -3,7 +3,7 @@
 @section('title', 'Gerbang Pembayaran Aman - Midtrans Simulator')
 
 @section('content')
-<section class="py-16 bg-slate-950 min-h-[80vh] flex items-center justify-center relative overflow-hidden">
+<section class="checkout-payment-page py-16 bg-slate-950 min-h-[80vh] flex items-center justify-center relative overflow-hidden">
     
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-950/15 via-slate-950 to-slate-950"></div>
 

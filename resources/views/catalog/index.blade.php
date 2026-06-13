@@ -27,7 +27,7 @@
                         <label for="search" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Pencarian Alat</label>
                         <div class="relative">
                             <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Kamera, tenda, drone..." 
-                                   class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                class="icon-input w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                             <i data-lucide="search" class="absolute left-3.5 top-3 h-4 w-4 text-slate-500"></i>
                         </div>
                     </div>

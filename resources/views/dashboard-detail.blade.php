@@ -22,7 +22,7 @@
                 
                 <!-- Return Notification -->
                 @php
-                    $returnDueAt = $rental->end_date->copy()->endOfDay();
+                    $returnDueAt = $rental->end_at ? $rental->end_at->copy() : $rental->end_date->copy()->endOfDay();
                     $notificationAt = $returnDueAt->copy()->addHours(3);
                     $isLateReturn = $rental->status === 'borrowed' && now()->greaterThanOrEqualTo($notificationAt);
                     $lateHours = $isLateReturn ? floor($notificationAt->diffInHours(now())) : 0;
@@ -186,7 +186,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Periode Sewa:</span>
-                            <span class="text-white font-bold">{{ $rental->start_date->format('d M Y') }} - {{ $rental->end_date->format('d M Y') }}</span>
+                            <span class="text-white font-bold">{{ $rental->start_at ? $rental->start_at->format('d M Y H:i') : $rental->start_date->format('d M Y') }} - {{ $rental->end_at ? $rental->end_at->format('d M Y H:i') : $rental->end_date->format('d M Y') }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Durasi:</span>

@@ -93,6 +93,7 @@ class CheckoutController extends Controller
         DB::beginTransaction();
 
         try {
+            $cartItems = array_values($cart);
             $ktpPath = null;
             if ($request->hasFile('ktp_photo')) {
                 $uploadPath = public_path('uploads/ktp');
@@ -111,7 +112,7 @@ class CheckoutController extends Controller
             $endDates = [];
             $grandTotal = 0;
 
-            foreach ($cart as $item) {
+            foreach ($cartItems as $item) {
                 $startDates[] = Carbon::parse($item['start_date']);
                 $endDates[] = Carbon::parse($item['end_date']);
                 $grandTotal += $item['subtotal'];
@@ -120,12 +121,18 @@ class CheckoutController extends Controller
             $minStart = min($startDates);
             $maxEnd = max($endDates);
             $totalDays = $minStart->diffInDays($maxEnd) + 1;
+            $firstItem = $cartItems[0];
+            $lastItem = $cartItems[count($cartItems) - 1];
+            $startAt = $firstItem['start_at'] ?? ($firstItem['start_date'] . ' 00:00:00');
+            $endAt = $lastItem['end_at'] ?? ($lastItem['end_date'] . ' 23:59:59');
 
             // 1. Create Rental Record
             $rental = Rental::create([
                 'user_id' => $user->id,
                 'start_date' => $minStart->format('Y-m-d'),
                 'end_date' => $maxEnd->format('Y-m-d'),
+                'start_at' => Carbon::parse($startAt)->format('Y-m-d H:i:s'),
+                'end_at' => Carbon::parse($endAt)->format('Y-m-d H:i:s'),
                 'total_days' => $totalDays,
                 'total_price' => $grandTotal,
                 'status' => 'pending',
@@ -138,7 +145,7 @@ class CheckoutController extends Controller
             ]);
 
             // 2. Create Rental Items
-            foreach ($cart as $item) {
+            foreach ($cartItems as $item) {
                 RentalItem::create([
                     'rental_id' => $rental->id,
                     'product_id' => $item['product_id'],

@@ -89,7 +89,10 @@ html.theme-light .bg-slate-900\/30 { background-color: rgba(226, 232, 240, 0.65)
 html.theme-light .bg-slate-900\/40 { background-color: rgba(226, 232, 240, 0.8) !important; }
 html.theme-light .bg-slate-900\/50 { background-color: rgba(226, 232, 240, 0.85) !important; }
 html.theme-light .bg-slate-900\/60 { background-color: rgba(226, 232, 240, 0.9) !important; }
+html.theme-light .bg-slate-900\/80 { background-color: rgba(248, 250, 252, 0.92) !important; }
 html.theme-light .bg-slate-950\/90 { background-color: rgba(248, 250, 252, 0.95) !important; }
+html.theme-light .bg-slate-950\/80 { background-color: rgba(248, 250, 252, 0.9) !important; }
+html.theme-light .bg-slate-950\/20 { background-color: rgba(226, 232, 240, 0.75) !important; }
 
 html.theme-light .text-slate-100 { color: #0f172a !important; }
 html.theme-light .text-slate-200 { color: #1e293b !important; }
@@ -99,10 +102,313 @@ html.theme-light .text-slate-500 { color: #64748b !important; }
 html.theme-light .text-slate-600 { color: #475569 !important; }
 html.theme-light .text-white { color: #0f172a !important; }
 
+html.theme-light .bg-gray-50 { background-color: #f8fafc !important; }
+html.theme-light .bg-gray-100 { background-color: #f1f5f9 !important; }
+html.theme-light .bg-gray-200 { background-color: #e2e8f0 !important; }
+html.theme-light .bg-gray-800 { background-color: #e2e8f0 !important; }
+html.theme-light .bg-gray-900 { background-color: #f8fafc !important; }
+html.theme-light .bg-white { background-color: #ffffff !important; }
+
+html.theme-light .text-gray-100 { color: #0f172a !important; }
+html.theme-light .text-gray-200 { color: #1e293b !important; }
+html.theme-light .text-gray-300 { color: #334155 !important; }
+html.theme-light .text-gray-400 { color: #475569 !important; }
+html.theme-light .text-gray-500 { color: #64748b !important; }
+html.theme-light .text-gray-600 { color: #475569 !important; }
+html.theme-light .text-gray-700 { color: #334155 !important; }
+html.theme-light .text-gray-800 { color: #1e293b !important; }
+
+html.theme-light .border-gray-100 { border-color: #e2e8f0 !important; }
+html.theme-light .border-gray-200 { border-color: #dbe4ee !important; }
+html.theme-light .border-gray-600 { border-color: #94a3b8 !important; }
+html.theme-light .border-gray-700 { border-color: #cbd5e1 !important; }
+
+html.theme-light .hover\:bg-gray-100:hover { background-color: #e2e8f0 !important; }
+html.theme-light .hover\:bg-gray-900:hover { background-color: #f1f5f9 !important; }
+html.theme-light .hover\:text-gray-300:hover { color: #334155 !important; }
+html.theme-light .hover\:text-gray-400:hover { color: #475569 !important; }
+html.theme-light .hover\:text-gray-500:hover { color: #64748b !important; }
+
+html.theme-light [class*="radial-gradient"] {
+    background-image: radial-gradient(ellipse at top, rgba(16, 185, 129, 0.08), rgba(255, 255, 255, 0) 62%) !important;
+}
+
+html.theme-light .from-emerald-950\/20,
+html.theme-light .from-emerald-950\/30,
+html.theme-light .from-orange-950\/10 {
+    --tw-gradient-from: rgba(16, 185, 129, 0.06) var(--tw-gradient-from-position);
+    --tw-gradient-to: rgba(16, 185, 129, 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+html.theme-light .via-slate-950 {
+    --tw-gradient-stops: var(--tw-gradient-from), rgba(226, 232, 240, 0.75) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+html.theme-light .to-slate-950 {
+    --tw-gradient-to: rgba(248, 250, 252, 0) var(--tw-gradient-to-position);
+}
+
+html.theme-light .bg-gradient-to-br.from-slate-900,
+html.theme-light .bg-gradient-to-b.from-slate-900,
+html.theme-light .bg-gradient-to-r.from-slate-900 {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96)) !important;
+}
+
+html.theme-light .checkout-payment-page {
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%) !important;
+}
+
+html.theme-light .checkout-payment-page .bg-slate-900,
+html.theme-light .checkout-payment-page .bg-slate-950,
+html.theme-light .checkout-payment-page .bg-slate-950\/60 {
+    background-color: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+html.theme-light .checkout-payment-page .text-white {
+    color: #0f172a !important;
+}
+
+html.theme-light .checkout-payment-page .text-slate-300,
+html.theme-light .checkout-payment-page .text-slate-400,
+html.theme-light .checkout-payment-page .text-slate-500,
+html.theme-light .checkout-payment-page .text-slate-600 {
+    color: #475569 !important;
+}
+
+html.theme-light .checkout-payment-page .border-slate-800,
+html.theme-light .checkout-payment-page .border-slate-900 {
+    border-color: #dbe4ee !important;
+}
+
+html.theme-light .checkout-payment-page .hover\:bg-slate-800\/40:hover,
+html.theme-light .checkout-payment-page .hover\:bg-slate-800:hover,
+html.theme-light .checkout-payment-page .hover\:bg-slate-950:hover {
+    background-color: #e2e8f0 !important;
+}
+
+html.theme-light .checkout-payment-page .bg-slate-950\/60,
+html.theme-light .checkout-payment-page .bg-slate-950\/40,
+html.theme-light .checkout-payment-page .bg-slate-950\/20 {
+    background-color: rgba(241, 245, 249, 0.95) !important;
+}
+
+html.theme-light .checkout-payment-page .border-slate-950 {
+    border-color: #dbe4ee !important;
+}
+
 html.theme-light .border-slate-900 { border-color: #cbd5e1 !important; }
 html.theme-light .border-slate-800 { border-color: #cbd5e1 !important; }
+html.theme-light .border-slate-850 { border-color: #dbe4ee !important; }
 html.theme-light .border-slate-900\/30 { border-color: rgba(148, 163, 184, 0.35) !important; }
+html.theme-light .border-slate-800\/40 { border-color: rgba(148, 163, 184, 0.32) !important; }
 
 html.theme-light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
 html.theme-light .hover\:bg-slate-900:hover { background-color: #f1f5f9 !important; }
 html.theme-light .hover\:bg-slate-950:hover { background-color: #f8fafc !important; }
+html.theme-light .hover\:bg-slate-900\/10:hover { background-color: rgba(226, 232, 240, 0.95) !important; }
+
+html.theme-light .glass.shadow,
+html.theme-light .glass {
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+html.theme-light body.bg-slate-950 {
+    background:
+        radial-gradient(circle at top left, rgba(16, 185, 129, 0.08), transparent 32%),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.06), transparent 28%),
+        #f8fafc !important;
+}
+
+html.theme-light header.bg-slate-950,
+html.theme-light main.bg-slate-950,
+html.theme-light aside.bg-slate-900,
+html.theme-light .bg-slate-900.glass,
+html.theme-light .bg-slate-950.glass {
+    background-color: rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+html.theme-light header.border-slate-900,
+html.theme-light main.border-slate-900,
+html.theme-light aside.border-slate-800 {
+    border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+html.theme-light .divide-slate-850 > :not([hidden]) ~ :not([hidden]) {
+    border-color: #e2e8f0 !important;
+}
+
+html.theme-light table thead tr,
+html.theme-light .table-head {
+    color: #64748b !important;
+}
+
+/* =========================================================================
+   HIGH CLARITY & ELEGANT FORM INPUT STYLING
+   ========================================================================= */
+
+/* High contrast inputs for Dark Mode */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="file"],
+input[type="date"],
+textarea,
+select {
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background-color: rgba(15, 23, 42, 0.75) !important;
+    color: #ffffff !important;
+    font-size: 0.875rem !important; /* text-sm (14px) instead of text-xs for superior legibility */
+    border-radius: 0.75rem !important;
+    outline: none !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+input[type="text"].icon-input,
+input[type="email"].icon-input,
+input[type="password"].icon-input,
+input[type="number"].icon-input,
+input[type="tel"].icon-input,
+input[type="file"].icon-input,
+input[type="date"].icon-input,
+textarea.icon-input,
+select.icon-input {
+    padding-left: 2.5rem !important;
+    padding-right: 1rem !important;
+}
+
+input[type="text"]:not(.icon-input),
+input[type="email"]:not(.icon-input),
+input[type="password"]:not(.icon-input),
+input[type="number"]:not(.icon-input),
+input[type="tel"]:not(.icon-input),
+input[type="file"]:not(.icon-input),
+input[type="date"]:not(.icon-input),
+textarea:not(.icon-input),
+select:not(.icon-input) {
+    padding: 0.75rem 1rem !important;
+}
+
+/* Dropdown list background & text */
+select option {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+
+/* Elegant focus state with emerald shadow glow */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="file"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    background-color: rgba(15, 23, 42, 0.9) !important;
+}
+
+/* Placeholders contrast */
+::placeholder {
+    color: #64748b !important;
+    opacity: 1 !important;
+}
+
+/* Disabled/Read-only states */
+input:disabled,
+textarea:disabled,
+select:disabled {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    color: #94a3b8 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    cursor: not-allowed !important;
+    opacity: 0.75 !important;
+}
+
+/* High contrast inputs for Light Mode */
+html.theme-light input[type="text"],
+html.theme-light input[type="email"],
+html.theme-light input[type="password"],
+html.theme-light input[type="number"],
+html.theme-light input[type="tel"],
+html.theme-light input[type="file"],
+html.theme-light input[type="date"],
+html.theme-light textarea,
+html.theme-light select {
+    border: 1px solid #94a3b8 !important; /* Lighter border for high contrast */
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.theme-light input[type="text"].icon-input,
+html.theme-light input[type="email"].icon-input,
+html.theme-light input[type="password"].icon-input,
+html.theme-light input[type="number"].icon-input,
+html.theme-light input[type="tel"].icon-input,
+html.theme-light input[type="file"].icon-input,
+html.theme-light input[type="date"].icon-input,
+html.theme-light textarea.icon-input,
+html.theme-light select.icon-input {
+    padding-left: 2.5rem !important;
+    padding-right: 1rem !important;
+}
+
+html.theme-light select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+html.theme-light input[type="text"]:focus,
+html.theme-light input[type="email"]:focus,
+html.theme-light input[type="password"]:focus,
+html.theme-light input[type="number"]:focus,
+html.theme-light input[type="tel"]:focus,
+html.theme-light input[type="file"]:focus,
+html.theme-light input[type="date"]:focus,
+html.theme-light textarea:focus,
+html.theme-light select:focus {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.theme-light ::placeholder {
+    color: #94a3b8 !important;
+}
+
+html.theme-light input:disabled,
+html.theme-light textarea:disabled,
+html.theme-light select:disabled {
+    background-color: #f1f5f9 !important;
+    color: #475569 !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Form labels - crisp, bold, readable */
+label {
+    color: #cbd5e1 !important;
+    font-size: 0.75rem !important; /* text-xs */
+    font-weight: 700 !important;
+    letter-spacing: 0.075em !important;
+    text-transform: uppercase !important;
+}
+
+html.theme-light label {
+    color: #334155 !important;
+}
+
+/* Higher general text contrast across components */
+.text-slate-300 { color: #e2e8f0 !important; }
+.text-slate-400 { color: #cbd5e1 !important; }
+.text-slate-500 { color: #94a3b8 !important; }
+
+html.theme-light .text-slate-300 { color: #1e293b !important; }
+html.theme-light .text-slate-400 { color: #334155 !important; }
+html.theme-light .text-slate-500 { color: #475569 !important; }

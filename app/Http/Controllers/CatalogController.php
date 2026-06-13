@@ -73,28 +73,29 @@ class CatalogController extends Controller
             ->take(4)
             ->get();
 
-        // Calculate Blocked Dates based on existing rents
-        // Get all rental items of this product that are active/approved/pending
+        // Block only dates where all stock is already reserved.
         $activeRentalItems = RentalItem::where('product_id', $product->id)
             ->whereHas('rental', function($q) {
                 $q->whereIn('status', ['pending', 'approved', 'borrowed']);
             })
             ->get();
 
-        $blockedDates = [];
+        $reservedByDate = [];
         foreach ($activeRentalItems as $item) {
             $start = Carbon::parse($item->rental->start_date);
             $end = Carbon::parse($item->rental->end_date);
-            
-            // Loop from start to end and add to blocked array
+
             $period = CarbonPeriod::create($start, $end);
             foreach ($period as $date) {
-                $blockedDates[] = $date->format('Y-m-d');
+                $dateKey = $date->format('Y-m-d');
+                $reservedByDate[$dateKey] = ($reservedByDate[$dateKey] ?? 0) + $item->quantity;
             }
         }
 
-        // Make dates unique
-        $blockedDates = array_values(array_unique($blockedDates));
+        $blockedDates = array_keys(array_filter(
+            $reservedByDate,
+            fn ($reservedQuantity) => $reservedQuantity >= $product->stock
+        ));
 
         return view('catalog.show', compact('product', 'relatedProducts', 'blockedDates'));
     }

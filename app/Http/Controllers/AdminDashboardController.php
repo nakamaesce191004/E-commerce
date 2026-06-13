@@ -48,14 +48,19 @@ class AdminDashboardController extends Controller
             ->get();
 
         // 3. Get monthly revenue charts data (last 6 months)
+        $driver = DB::connection()->getDriverName();
+        $monthKeyExpr = $driver === 'sqlite'
+            ? "strftime('%Y-%m', created_at) as month_key"
+            : "DATE_FORMAT(created_at, '%Y-%m') as month_key";
+
         $revenueData = Rental::select(
-                DB::raw("strftime('%m', created_at) as month"),
-                DB::raw("sum(total_price) as total")
+                DB::raw($monthKeyExpr),
+                DB::raw('SUM(total_price) as total')
             )
             ->where('payment_status', 'paid')
-            ->groupBy('month')
-            ->orderBy('month', 'asc')
-            ->take(6)
+            ->where('created_at', '>=', now()->subMonths(5)->startOfMonth())
+            ->groupBy('month_key')
+            ->orderBy('month_key', 'asc')
             ->get();
 
         $chartLabels = [];
@@ -63,8 +68,7 @@ class AdminDashboardController extends Controller
         
         // Populate chart details
         foreach ($revenueData as $data) {
-            $monthNum = (int)$data->month;
-            $monthName = Carbon::create()->month($monthNum)->translatedFormat('F');
+            $monthName = Carbon::createFromFormat('Y-m', $data->month_key)->translatedFormat('F Y');
             $chartLabels[] = $monthName;
             $chartValues[] = (float)$data->total;
         }

@@ -32,7 +32,7 @@
 
             <div class="grid grid-cols-1 gap-6 text-xs text-slate-300">
                 <div class="space-y-2">
-                    <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Rincian Customer</p>
+                    <!-- <p class="text-slate-500 font-bold uppercase text-[9px] tracking-wide">Rincian Customer</p> -->
                     <p class="font-bold text-white text-sm">{{ $rental->user->name }}</p>
                     <p class="font-mono text-slate-400">{{ $rental->user->email }}</p>
                     <p class="font-mono text-slate-400">WA Hotline: {{ $rental->phone }}</p>
@@ -109,7 +109,7 @@
             
             <div class="border-t border-slate-850 pt-4 flex justify-between items-center text-xs">
                 <span class="text-slate-400">Total Periode Sewa:</span>
-                <span class="text-white font-bold">{{ $rental->start_date->format('d M Y') }} s/d {{ $rental->end_date->format('d M Y') }} ({{ $rental->total_days }} Hari)</span>
+                <span class="text-white font-bold">{{ $rental->start_at ? $rental->start_at->format('d M Y H:i') : $rental->start_date->format('d M Y') }} s/d {{ $rental->end_at ? $rental->end_at->format('d M Y H:i') : $rental->end_date->format('d M Y') }} ({{ $rental->total_days }} Hari)</span>
             </div>
         </div>
 

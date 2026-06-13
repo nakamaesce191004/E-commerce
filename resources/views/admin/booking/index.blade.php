@@ -21,8 +21,8 @@
     <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
         <form action="{{ route('admin.bookings.index') }}" method="GET" class="flex items-center gap-2 w-full sm:w-auto">
             <div class="relative w-full sm:w-72">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama penyewa or barang..." 
-                       class="w-full bg-slate-950 border border-slate-850 focus:border-emerald-500 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none">
+                  <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama penyewa or barang..." 
+                      class="icon-input w-full bg-slate-950 border border-slate-850 focus:border-emerald-500 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none">
                 <span class="absolute left-3 top-2.5 text-slate-500">
                     <i data-lucide="search" class="h-4 w-4"></i>
                 </span>
