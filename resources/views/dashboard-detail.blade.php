@@ -190,7 +190,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Durasi:</span>
-                            <span class="text-white font-bold">{{ $rental->total_days }} Hari</span>
+                            <span class="text-white font-bold">{{ $rental->total_days }} Hari (24 jam)</span>
                         </div>
                         <div class="space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-900">
                             <p class="text-slate-500 font-bold uppercase text-[9px]">Identitas Pengambil:</p>

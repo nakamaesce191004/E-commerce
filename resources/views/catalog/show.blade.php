@@ -171,7 +171,7 @@
                             <div id="cost-calc-box" class="hidden p-4 rounded-xl bg-slate-950 border border-slate-900 space-y-2 text-xs">
                                 <div class="flex justify-between text-slate-400">
                                     <span>Durasi Sewa:</span>
-                                    <span class="text-white font-bold" id="calc-duration">- Hari</span>
+                                    <span class="text-white font-bold" id="calc-duration">- Hari (24 jam)</span>
                                 </div>
                                 <div class="flex justify-between text-slate-400">
                                     <span>Tarif Harian:</span>
@@ -379,15 +379,15 @@
                 const startDate = new Date(startVal);
                 const endDate = new Date(endVal);
 
-                // Calculate total days (inclusive of start & end day)
-                const diffTime = Math.abs(endDate - startDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                // Calculate rental duration in 24-hour blocks
+                const diffTime = Math.max(0, endDate - startDate);
+                const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
                 if (!isNaN(diffDays) && diffDays > 0) {
                     const totalCost = diffDays * pricePerDay;
 
                     // Update UI text
-                    calcDuration.textContent = diffDays + ' Hari';
+                    calcDuration.textContent = diffDays + ' Hari (24 jam)';
                     calcTotal.textContent = 'Rp ' + totalCost.toLocaleString('id-ID');
 
                     // Show Box

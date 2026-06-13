@@ -101,7 +101,7 @@
                             </div>
                             <div>
                                 <p class="text-[9px] text-slate-500 uppercase">Durasi</p>
-                                <p class="font-semibold text-slate-300">{{ $rental->total_days }} H</p>
+                                <p class="font-semibold text-slate-300">{{ $rental->total_days }} H (24 jam)</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-[9px] text-slate-500 uppercase">Subtotal</p>

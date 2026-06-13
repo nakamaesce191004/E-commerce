@@ -41,7 +41,8 @@ class CartController extends Controller
         $endAt = Carbon::parse($request->end_date);
         $startDate = $startAt->copy()->startOfDay();
         $endDate = $endAt->copy()->startOfDay();
-        $totalDays = $startDate->diffInDays($endDate) + 1; // inclusive of start/end days
+        $durationHours = max(0, $startAt->diffInHours($endAt));
+        $totalDays = max(1, (int) ceil($durationHours / 24));
 
         $product = Product::findOrFail($productId);
 

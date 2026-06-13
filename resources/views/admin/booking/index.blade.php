@@ -83,14 +83,14 @@
                             <td class="py-4">
                                 <p class="font-bold text-slate-200">{{ $product->name }}</p>
                                 <p class="text-[10px] text-slate-500 mt-0.5">
-                                    {{ $rental->start_date->format('d M Y') }} s/d {{ $rental->end_date->format('d M Y') }} ({{ $rental->total_days }} Hari)
+                                    {{ $rental->start_date->format('d M Y') }} s/d {{ $rental->end_date->format('d M Y') }} ({{ $rental->total_days }} Hari (24 jam))
                                 </p>
                             </td>
                             <!-- Price x Days -->
                             <td class="py-4">
                                 <p class="font-bold text-emerald-400">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</p>
                                 <p class="text-[9px] text-slate-500 mt-0.5 font-mono">
-                                    Rp {{ number_format($item->price_per_day, 0, ',', '.') }}/hari x {{ $rental->total_days }} hari
+                                    Rp {{ number_format($item->price_per_day, 0, ',', '.') }}/hari x {{ $rental->total_days }} Hari (24 jam)
                                 </p>
                             </td>
                             <!-- Status -->

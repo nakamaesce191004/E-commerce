@@ -99,7 +99,7 @@
                             <td class="px-4 py-4 font-bold text-slate-900">{{ $item->product->name }}</td>
                             <td class="px-4 py-4 text-slate-500">{{ $item->product->category->name }}</td>
                             <td class="px-4 py-4 text-right text-slate-600">Rp {{ number_format($item->price_per_day, 0, ',', '.') }}</td>
-                            <td class="px-4 py-4 text-center text-slate-700 font-bold">{{ $rental->total_days }} Hari</td>
+                            <td class="px-4 py-4 text-center text-slate-700 font-bold">{{ $rental->total_days }} Hari (24 jam)</td>
                             <td class="px-4 py-4 text-right font-bold text-slate-950">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach

@@ -110,21 +110,26 @@ class CheckoutController extends Controller
             // Find overall start and end dates
             $startDates = [];
             $endDates = [];
+            $startTimes = [];
+            $endTimes = [];
             $grandTotal = 0;
 
             foreach ($cartItems as $item) {
                 $startDates[] = Carbon::parse($item['start_date']);
                 $endDates[] = Carbon::parse($item['end_date']);
+                $startTimes[] = Carbon::parse($item['start_at'] ?? ($item['start_date'] . ' 00:00:00'));
+                $endTimes[] = Carbon::parse($item['end_at'] ?? ($item['end_date'] . ' 23:59:59'));
                 $grandTotal += $item['subtotal'];
             }
 
             $minStart = min($startDates);
             $maxEnd = max($endDates);
-            $totalDays = $minStart->diffInDays($maxEnd) + 1;
             $firstItem = $cartItems[0];
             $lastItem = $cartItems[count($cartItems) - 1];
             $startAt = $firstItem['start_at'] ?? ($firstItem['start_date'] . ' 00:00:00');
             $endAt = $lastItem['end_at'] ?? ($lastItem['end_date'] . ' 23:59:59');
+            $durationHours = max(0, min($startTimes)->diffInHours(max($endTimes)));
+            $totalDays = max(1, (int) ceil($durationHours / 24));
 
             // 1. Create Rental Record
             $rental = Rental::create([

@@ -556,7 +556,8 @@ class AdminDashboardController extends Controller
         
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
-        $totalDays = $startDate->diffInDays($endDate) + 1;
+        $durationHours = max(0, $startDate->diffInHours($endDate));
+        $totalDays = max(1, (int) ceil($durationHours / 24));
         $totalPrice = $product->price_per_day * $totalDays;
 
         // Perform stock validation day-by-day

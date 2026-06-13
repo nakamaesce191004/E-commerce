@@ -98,12 +98,12 @@
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-slate-500">Durasi Sewa</span>
-                        <span class="font-bold text-white"><span x-text="summary.totalDays"></span> Hari</span>
+                        <span class="font-bold text-white"><span x-text="summary.totalDays"></span> Hari (24 jam)</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-slate-500">Perhitungan Harga</span>
                         <span class="font-bold text-slate-300">
-                            Rp <span x-text="formatNumber(selectedProduct.price)"></span> x <span x-text="summary.totalDays"></span> Hari
+                            Rp <span x-text="formatNumber(selectedProduct.price)"></span> x <span x-text="summary.totalDays"></span> Hari (24 jam)
                         </span>
                     </div>
                     <div class="flex items-center justify-between border-t border-slate-900 pt-3">
@@ -165,8 +165,8 @@
                     const start = new Date(this.dates.start);
                     const end = new Date(this.dates.end);
                     if (end >= start) {
-                        const diffTime = Math.abs(end - start);
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                            const diffTime = Math.max(0, end - start);
+                            const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
                         this.summary.totalDays = diffDays;
                         this.summary.totalPrice = diffDays * this.selectedProduct.price;
                         return;

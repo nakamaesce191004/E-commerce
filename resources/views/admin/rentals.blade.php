@@ -67,7 +67,7 @@
                         <!-- Dates -->
                         <td class="py-4">
                             <span class="font-semibold text-slate-300">{{ $rent->start_date->format('d M Y') }} - {{ $rent->end_date->format('d M Y') }}</span>
-                            <span class="text-[10px] text-slate-500 block mt-0.5">Durasi: {{ $rent->total_days }} Hari</span>
+                            <span class="text-[10px] text-slate-500 block mt-0.5">Durasi: {{ $rent->total_days }} Hari (24 jam)</span>
                         </td>
 
                         <!-- Price -->

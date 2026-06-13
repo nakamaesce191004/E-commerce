@@ -79,7 +79,7 @@
                                 <p class="font-bold text-slate-200">{{ $rent->user->name }}</p>
                                 <p class="text-[10px] text-slate-500 mt-0.5 font-mono">{{ $rent->user->email }}</p>
                             </td>
-                            <td class="py-4 font-semibold text-slate-400">{{ $rent->total_days }} Hari sewa</td>
+                            <td class="py-4 font-semibold text-slate-400">{{ $rent->total_days }} Hari sewa (24 jam)</td>
                             <td class="py-4 uppercase text-slate-400 font-semibold">{{ $rent->payment_method }}</td>
                             <td class="py-4 text-right font-extrabold text-emerald-400">Rp {{ number_format($rent->total_price, 0, ',', '.') }}</td>
                         </tr>

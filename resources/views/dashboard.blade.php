@@ -59,7 +59,7 @@
                                         <div class="font-bold text-slate-200">
                                             {{ $rental->start_date->format('d M Y') }} - {{ $rental->end_date->format('d M Y') }}
                                         </div>
-                                        <div class="text-[10px] text-slate-500 mt-0.5">Durasi: {{ $rental->total_days }} Hari</div>
+                                        <div class="text-[10px] text-slate-500 mt-0.5">Durasi: {{ $rental->total_days }} Hari (24 jam)</div>
                                     </td>
 
                                     <!-- Price -->

@@ -44,7 +44,7 @@
                                 <div class="text-slate-500">Selesai:</div>
                                 <div class="text-white font-bold">{{ !empty($item['end_at']) ? \Carbon\Carbon::parse($item['end_at'])->format('d M Y H:i') : \Carbon\Carbon::parse($item['end_date'])->format('d M Y') }}</div>
                                 <div class="text-slate-500">Durasi:</div>
-                                <div class="text-emerald-400 font-extrabold">{{ $item['total_days'] }} Hari</div>
+                                <div class="text-emerald-400 font-extrabold">{{ $item['total_days'] }} Hari (24 jam)</div>
                             </div>
 
                             <!-- Subtotal and Action -->

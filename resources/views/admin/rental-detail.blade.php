@@ -109,7 +109,7 @@
             
             <div class="border-t border-slate-850 pt-4 flex justify-between items-center text-xs">
                 <span class="text-slate-400">Total Periode Sewa:</span>
-                <span class="text-white font-bold">{{ $rental->start_at ? $rental->start_at->format('d M Y H:i') : $rental->start_date->format('d M Y') }} s/d {{ $rental->end_at ? $rental->end_at->format('d M Y H:i') : $rental->end_date->format('d M Y') }} ({{ $rental->total_days }} Hari)</span>
+                <span class="text-white font-bold">{{ $rental->start_at ? $rental->start_at->format('d M Y H:i') : $rental->start_date->format('d M Y') }} s/d {{ $rental->end_at ? $rental->end_at->format('d M Y H:i') : $rental->end_date->format('d M Y') }} ({{ $rental->total_days }} Hari (24 jam))</span>
             </div>
         </div>
 
