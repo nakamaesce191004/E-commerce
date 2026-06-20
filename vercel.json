@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "installCommand": "npm ci && composer install --no-dev --optimize-autoloader",
+  "buildCommand": "npm run build",
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.9.0"
+    }
+  },
+  "routes": [
+    {
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/public/uploads/$1"
+    },
+    {
+      "src": "/(favicon.ico|robots.txt)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "LOG_CHANNEL": "stderr",
+    "CACHE_STORE": "array",
+    "SESSION_DRIVER": "cookie",
+    "QUEUE_CONNECTION": "sync",
+    "VIEW_COMPILED_PATH": "/tmp/views"
+  }
+}
