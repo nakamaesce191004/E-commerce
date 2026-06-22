@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -13,23 +11,17 @@ class FrontendController extends Controller
      */
     public function home()
     {
-        // Get popular categories
-        $categories = Category::all()->take(6);
-
-        // Get featured products (high rating & available)
-        $featuredProducts = Product::with('category')
-            ->where('status', 'available')
-            ->orderBy('rating', 'desc')
-            ->take(4)
-            ->get();
-
-        // Get some newly arrived products
-        $latestProducts = Product::with('category')
-            ->orderBy('created_at', 'desc')
-            ->take(4)
-            ->get();
-
-        return view('home', compact('categories', 'featuredProducts', 'latestProducts'));
+        return response()->html('
+            <html>
+                <head>
+                    <title>Laravel Test</title>
+                </head>
+                <body style="font-family: Arial; text-align:center; padding:50px;">
+                    <h1>Laravel OK</h1>
+                    <p>Laravel berhasil berjalan di Vercel.</p>
+                </body>
+            </html>
+        ');
     }
 
     /**
