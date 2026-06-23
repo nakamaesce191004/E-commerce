@@ -17,25 +17,29 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Seed Users (Admin & Customer)
-        $admin = User::create([
-            'name' => 'Admin EquipRent',
-            'email' => 'admin@equiprent.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-            'phone' => '081234567890',
-            'address' => 'HQ EquipRent, Kebayoran Baru, Jakarta Selatan',
-            'profile_photo' => null
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@equiprent.com'],
+            [
+                'name' => 'Admin EquipRent',
+                'password' => Hash::make('admin123'),
+                'role' => 'admin',
+                'phone' => '081234567890',
+                'address' => 'HQ EquipRent, Kebayoran Baru, Jakarta Selatan',
+                'profile_photo' => null
+            ]
+        );
 
-        $customer = User::create([
-            'name' => 'Budi Santoso',
-            'email' => 'customer@equiprent.com',
-            'password' => Hash::make('customer123'),
-            'role' => 'customer',
-            'phone' => '089876543210',
-            'address' => 'Jl. Dago No. 102, Coblong, Kota Bandung',
-            'profile_photo' => null
-        ]);
+        $customer = User::firstOrCreate(
+            ['email' => 'customer@equiprent.com'],
+            [
+                'name' => 'Budi Santoso',
+                'password' => Hash::make('customer123'),
+                'role' => 'customer',
+                'phone' => '089876543210',
+                'address' => 'Jl. Dago No. 102, Coblong, Kota Bandung',
+                'profile_photo' => null
+            ]
+        );
 
         // 2. Seed Categories
         $categoriesData = [
@@ -52,7 +56,9 @@ class DatabaseSeeder extends Seeder
 
         $categories = [];
         foreach ($categoriesData as $cat) {
-            $categories[$cat['slug']] = Category::create($cat);
+            $categories[$cat['slug']] = Category::firstOrCreate([
+                'slug' => $cat['slug']
+            ], $cat);
         }
 
         // 3. Seed Products
@@ -324,12 +330,18 @@ class DatabaseSeeder extends Seeder
             $prod['denda_per_day'] = $prod['denda_per_day'] ?? (round($prod['price_per_day'] * 0.20 / 5000) * 5000); // 20% of price rounded to nearest 5000
 
             $category = $categories[$catSlug];
-            $product = $category->products()->create($prod);
 
-            // 4. Seed Reviews for this product
-            Review::create([
+            $productData = array_merge($prod, ['category_id' => $category->id]);
+
+            $product = Product::firstOrCreate([
+                'slug' => $productData['slug']
+            ], $productData);
+
+            // 4. Seed Reviews for this product (avoid duplicate by user+product)
+            Review::firstOrCreate([
                 'user_id' => $customer->id,
-                'product_id' => $product->id,
+                'product_id' => $product->id
+            ], [
                 'rating' => rand(4, 5),
                 'comment' => 'Barangnya dalam kondisi sangat bagus, bersih, dan performanya mantap saat dibawa kemarin. Pelayanan toko juga sangat ramah dan responsif!'
             ]);

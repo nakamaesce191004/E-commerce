@@ -72,12 +72,13 @@
 
                         <div>
                             <label for="ktp_photo" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Upload Foto KTP</label>
-                            <input type="file" id="ktp_photo" name="ktp_photo" required accept="image/png,image/jpeg"
+                            <input type="file" id="ktp_photo" name="ktp_photo_file" required accept="image/png,image/jpeg"
                                    class="w-full bg-slate-950 border border-slate-800 text-xs text-white rounded-xl p-2.5 focus:border-emerald-500 focus:outline-none @error('ktp_photo') border-orange-500 @enderror">
+                            <input type="hidden" id="ktp_photo_hidden" name="ktp_photo" value="">
                             @error('ktp_photo')
                                 <p class="text-xs text-orange-500 mt-1.5">{{ $message }}</p>
                             @enderror
-                            <p class="text-[10px] text-slate-500 mt-1.5">Foto KTP dipakai admin untuk mencocokkan identitas saat barang diambil di toko. Format JPG/PNG maksimal 2MB.</p>
+                            <p class="text-[10px] text-slate-500 mt-1.5">Foto KTP dipakai admin untuk mencocokkan identitas saat barang diambil di toko. Format JPG/PNG maksimal 2MB. File akan diupload langsung ke S3 untuk menghindari masalah penyimpanan di serverless.</p>
                         </div>
                     </div>
                 </div>
@@ -154,3 +155,56 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('ktp_photo');
+    const hiddenInput = document.getElementById('ktp_photo_hidden');
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    if (!fileInput) return;
+
+    fileInput.addEventListener('change', async function (e) {
+        const file = this.files[0];
+        if (!file) return;
+
+        submitBtn.disabled = true;
+
+        try {
+            // Request presigned URL from server
+            const presignRes = await fetch("{{ route('dashboard.upload-ktp.presign') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ filename: file.name, content_type: file.type })
+            });
+
+            if (!presignRes.ok) throw new Error('Gagal meminta presign URL');
+            const presign = await presignRes.json();
+
+            // Upload file via PUT to presigned URL
+            const putRes = await fetch(presign.url, {
+                method: 'PUT',
+                headers: { 'Content-Type': file.type },
+                body: file
+            });
+
+            if (!putRes.ok) throw new Error('Gagal mengupload ke S3');
+
+            // Set hidden input to the public URL returned by server
+            hiddenInput.value = presign.public_url;
+        } catch (err) {
+            alert('Upload KTP gagal: ' + err.message);
+            console.error(err);
+            // Clear file input so user can retry
+            fileInput.value = '';
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+});
+</script>
+@endpush

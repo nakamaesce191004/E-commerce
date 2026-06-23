@@ -9,6 +9,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
 {
@@ -42,7 +43,9 @@ class CheckoutController extends Controller
             'phone' => 'required|string',
             'ktp_name' => 'required|string|max:255',
             'nik' => 'required|digits:16',
-            'ktp_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            // Accept either a direct file upload (`ktp_photo_file`) or a presigned-uploaded URL (`ktp_photo`)
+            'ktp_photo_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'ktp_photo' => 'required_without:ktp_photo_file|string'
         ]);
 
         $cart = session('cart', []);
@@ -96,15 +99,26 @@ class CheckoutController extends Controller
             $cartItems = array_values($cart);
             $ktpPath = null;
             if ($request->hasFile('ktp_photo')) {
-                $uploadPath = public_path('uploads/ktp');
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-
                 $file = $request->file('ktp_photo');
                 $filename = 'ktp_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $file->move($uploadPath, $filename);
-                $ktpPath = 'uploads/ktp/' . $filename;
+
+                // If configured to use S3 (Vercel), store to S3 and save public URL
+                if (config('filesystems.default') === 's3' || env('FILESYSTEM_DISK') === 's3') {
+                    $path = $file->storeAs('ktp', $filename, 's3');
+                    $ktpPath = Storage::disk('s3')->url($path);
+                } else {
+                    // Local storage (fallback)
+                    $uploadPath = public_path('uploads/ktp');
+                    if (!is_dir($uploadPath)) {
+                        mkdir($uploadPath, 0755, true);
+                    }
+
+                    $file->move($uploadPath, $filename);
+                    $ktpPath = 'uploads/ktp/' . $filename;
+                }
+            } elseif ($request->filled('ktp_photo')) {
+                // If client uploaded directly to S3 and sent back the public URL/key
+                $ktpPath = $request->input('ktp_photo');
             }
 
             // Find overall start and end dates

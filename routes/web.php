@@ -8,6 +8,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\S3UploadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,6 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/rental/{id}', [UserDashboardController::class, 'show'])->name('dashboard.rental');
     Route::post('/dashboard/rental/{id}/upload-proof', [UserDashboardController::class, 'uploadProof'])->name('dashboard.upload-proof');
     Route::post('/dashboard/review', [UserDashboardController::class, 'storeReview'])->name('dashboard.review');
+    
+    // Upload KTP (stored directly to S3)
+    Route::post('/dashboard/upload-ktp', [S3UploadController::class, 'uploadKtp'])->name('dashboard.upload-ktp');
+    Route::post('/dashboard/upload-ktp/presign', [S3UploadController::class, 'presign'])->name('dashboard.upload-ktp.presign');
 });
 
 /*
